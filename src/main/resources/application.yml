@@ -1,0 +1,27 @@
+logging:
+  level:
+    org.hibernate.orm.jdbc.bind: TRACE
+
+spring:
+  datasource:
+    url: jdbc:h2:tcp://localhost/~/test;AUTO_SERVER=TRUE
+    username: splguyjr
+    password:
+    driver-class-name: org.h2.Driver
+  jpa:
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+        use_sql_comments: true
+        highlight_sql: true
+
+    hibernate:
+      ddl-auto: update
+
+oauth:
+  kakao:
+    client_id: ${api-key} # REST API ?
+    redirect_uri: http://localhost:3000/oauth/redirected/kakao
+    client_secret: ${secret-key} # Client Secret ?
+    scope: profile_nickname, profile_image
