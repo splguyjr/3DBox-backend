@@ -1,7 +1,7 @@
 package CloudComputingD.DBox.service;
 
 import CloudComputingD.DBox.entity.User;
-import CloudComputingD.DBox.repository.OauthMemberRepository;
+import CloudComputingD.DBox.repository.UserRepository;
 import CloudComputingD.DBox.oauth.domain.OauthServerType;
 import CloudComputingD.DBox.oauth.domain.authcode.AuthCodeRequestUrlProviderComposite;
 import CloudComputingD.DBox.oauth.domain.client.OauthMemberClientComposite;
@@ -14,7 +14,7 @@ public class OauthService {
 
     private final AuthCodeRequestUrlProviderComposite authCodeRequestUrlProviderComposite;
     private final OauthMemberClientComposite oauthMemberClientComposite;
-    private final OauthMemberRepository oauthMemberRepository;
+    private final UserRepository oauthMemberRepository;
 
     public String getAuthCodeRequestUrl(OauthServerType oauthServerType) {
         return authCodeRequestUrlProviderComposite.provide(oauthServerType);
