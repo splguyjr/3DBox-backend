@@ -1,12 +1,9 @@
 package CloudComputingD.DBox.repository;
 
-import CloudComputingD.DBox.domain.File;
+import CloudComputingD.DBox.entity.File;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import org.springframework.stereotype.Repository;
-
-import java.util.List;
-import java.util.Optional;
 
 @Repository
 public class FileRepository {

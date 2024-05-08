@@ -1,16 +1,10 @@
 package CloudComputingD.DBox.service;
 
-import CloudComputingD.DBox.domain.File;
+import CloudComputingD.DBox.entity.File;
 import CloudComputingD.DBox.repository.FileRepository;
-import com.amazonaws.services.s3.AmazonS3;
-import org.springframework.http.HttpStatus;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.stream.Collectors;
 
 public class FileService {
     private final FileRepository fileRepository = new FileRepository();
