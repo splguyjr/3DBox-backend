@@ -17,4 +17,16 @@ public class File {
     private String s3_key;
     private BigDecimal location_x;
     private BigDecimal location_y;
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setDeleted_date(LocalDateTime deleted_date) {
+        this.deleted_date = deleted_date;
+    }
+
+    public void setIs_deleted(Boolean is_deleted) {
+        this.is_deleted = is_deleted;
+    }
 }

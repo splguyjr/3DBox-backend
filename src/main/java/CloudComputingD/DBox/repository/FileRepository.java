@@ -17,7 +17,7 @@ public class FileRepository {
     public void save(File file) {
         em.persist(file);
     }
-    public File findById(Long id) {
+    public File findById(Integer id) {
         return em.find(File.class, id);
     }
 //    public List<File> findByUser(User user);
