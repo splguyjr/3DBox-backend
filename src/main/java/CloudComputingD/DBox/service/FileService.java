@@ -2,7 +2,7 @@ package CloudComputingD.DBox.service;
 
 import CloudComputingD.DBox.entity.File;
 import CloudComputingD.DBox.repository.FileRepository;
-import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -18,7 +18,7 @@ import java.time.LocalDateTime;
 public class FileService {
     private final FileRepository fileRepository = new FileRepository();
 
-    private final AmazonS3 amazonS3;
+    private final AmazonS3Client amazonS3Client;
 
     @Value("${cloud.aws.s3.bucket}")
     private String bucket;
@@ -33,15 +33,15 @@ public class FileService {
         metadata.setContentLength(multipartFile.getSize());
         metadata.setContentType(multipartFile.getContentType());
 
-        amazonS3.putObject(bucket, originalFilename, multipartFile.getInputStream(), metadata);
+        amazonS3Client.putObject(bucket, originalFilename, multipartFile.getInputStream(), metadata);
 
         fileRepository.save(
                 File.builder()
                         .name(multipartFile.getOriginalFilename())
                         .type(multipartFile.getContentType())
-                        .size(multipartFile.getSize())
+                        .size((int)multipartFile.getSize())
                         .created_date(LocalDateTime.now())
-                        .s3_key(amazonS3.getUrl(bucket, originalFilename).toString())
+                        .s3_key(amazonS3Client.getUrl(bucket, originalFilename).toString())
                         .build()
         );
     }

@@ -1,13 +1,13 @@
 package CloudComputingD.DBox.entity;
 
 import jakarta.persistence.*;
+import lombok.AccessLevel;
 import lombok.Builder;
-import org.hibernate.validator.constraints.br.CPF;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
-//@Builder // 클래스 빌더 패턴으로 JPA 엔티티 객체를 생성한다.
+@Builder // 클래스 빌더 패턴으로 JPA 엔티티 객체를 생성한다.
 @Entity // 해당 어노테이션이 적용된 클래스는 JPA가 엔티티로 인식하며 테이블과 링크될 클래스임을 나타낸다.
 public class File {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -57,14 +57,5 @@ public class File {
 
     public void setIs_deleted(Boolean is_deleted) {
         this.is_deleted = is_deleted;
-    }
-
-    @Builder
-    public File(String name, String type, Integer size, LocalDateTime created_date, String s3_key) {
-        this.name = name;
-        this.type = type;
-        this.size = size;
-        this.created_date = created_date;
-        this.s3_key = s3_key;
     }
 }
