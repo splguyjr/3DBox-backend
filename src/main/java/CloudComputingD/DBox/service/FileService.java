@@ -2,29 +2,49 @@ package CloudComputingD.DBox.service;
 
 import CloudComputingD.DBox.entity.File;
 import CloudComputingD.DBox.repository.FileRepository;
+import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.model.ObjectMetadata;
+import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.time.LocalDateTime;
 
+@Service
+@RequiredArgsConstructor
 public class FileService {
     private final FileRepository fileRepository = new FileRepository();
 
-//    private final AmazonS3 amazonS3;
-//
-//
-//    /**
-//     * 파일 업로드
-//     */
-//    public void uploadFile(MultipartFile multipartFile) throws IOException {
-//        String originalFilename = multipartFile.getOriginalFilename();
-//
-//        ObjectMetadata metadata = new ObjectMetadata();
-//        metadata.setContentLength(multipartFile.getSize());
-//        metadata.setContentType(multipartFile.getContentType());
-//
-//        amazonS3.putObject(bucket, originalFilename, multipartFile.getInputStream(), metadata);
-//        return amazonS3.getUrl(bucket, originalFilename).toString();
-//    }
+    private final AmazonS3 amazonS3;
+
+    @Value("${cloud.aws.s3.bucket}")
+    private String bucket;
+
+    /**
+     * 파일 업로드
+     */
+    public void uploadFile(MultipartFile multipartFile) throws IOException {
+        String originalFilename = multipartFile.getOriginalFilename();
+
+        ObjectMetadata metadata = new ObjectMetadata();
+        metadata.setContentLength(multipartFile.getSize());
+        metadata.setContentType(multipartFile.getContentType());
+
+        amazonS3.putObject(bucket, originalFilename, multipartFile.getInputStream(), metadata);
+
+        fileRepository.save(
+                File.builder()
+                        .name(multipartFile.getOriginalFilename())
+                        .type(multipartFile.getContentType())
+                        .size(multipartFile.getSize())
+                        .created_date(LocalDateTime.now())
+                        .s3_key(amazonS3.getUrl(bucket, originalFilename).toString())
+                        .build()
+        );
+    }
 
     /**
      * 파일 정보 조회
