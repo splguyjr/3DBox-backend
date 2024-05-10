@@ -42,7 +42,7 @@ public class FileController {
         return ResponseEntity.ok(fileService.renameFile(fileId, newName));
     }
 
-    @PatchMapping(value="/trash/{fileId}")
+    @PatchMapping(value="/file/trash/{fileId}")
     public ResponseEntity<Integer> trashFile(
             @PathVariable("fileId") Integer fileId
     ) {
