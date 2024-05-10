@@ -2,14 +2,19 @@ package CloudComputingD.DBox.entity;
 
 import jakarta.persistence.*;
 import jakarta.validation.groups.Default;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.ColumnDefault;
 
 import java.time.LocalDateTime;
 
 @Entity
 @Getter
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
 public class Folder {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
