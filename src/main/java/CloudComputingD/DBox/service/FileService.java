@@ -49,7 +49,7 @@ public class FileService {
                 File.builder()
                         .name(originalFilename)
                         .type(multipartFile.getContentType())
-                        .size((int)multipartFile.getSize())
+                        .size((Long)multipartFile.getSize())
                         .created_date(LocalDateTime.now())
                         .s3_key(amazonS3Client.getUrl(bucket, originalFilename).toString())
                         .build()

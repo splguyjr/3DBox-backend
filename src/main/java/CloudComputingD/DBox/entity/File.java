@@ -3,6 +3,7 @@ package CloudComputingD.DBox.entity;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
@@ -11,11 +12,12 @@ import java.time.LocalDateTime;
 @Builder // 클래스 빌더 패턴으로 JPA 엔티티 객체를 생성한다.
 @NoArgsConstructor
 @AllArgsConstructor
+@Getter
 @Entity // 해당 어노테이션이 적용된 클래스는 JPA가 엔티티로 인식하며 테이블과 링크될 클래스임을 나타낸다.
 public class File {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column
-    private Integer id;
+    private Long id;
 
     @Column(nullable = false)
     private String name;
@@ -24,7 +26,7 @@ public class File {
     private String type;
 
     @Column(nullable = false)
-    private Integer size;
+    private Long size;
 
     @Column
     private String parent_id;

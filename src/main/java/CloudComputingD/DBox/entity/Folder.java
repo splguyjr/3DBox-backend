@@ -2,13 +2,12 @@ package CloudComputingD.DBox.entity;
 
 import jakarta.persistence.*;
 import jakarta.validation.groups.Default;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -19,6 +18,11 @@ public class Folder {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @OneToMany(fetch = FetchType.EAGER)
+    @JoinColumn(name = "folder_id")
+    @ToString.Exclude
+    private List<File> files = new ArrayList<>();
 
     @Column
     private Long user_id;
@@ -40,5 +44,6 @@ public class Folder {
 
     @Column
     private Boolean is_deleted = false;
+
 
 }
