@@ -9,7 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
 
@@ -36,16 +35,27 @@ public class FolderService {
     }
 
     //folderId를 받아 해당 폴더에 속하는 File들의 list를 받아오고 mapper를 통해 ResponseDto로 변환하여 리턴
-    public List<FolderFileResponseDTO> getFileByFolderId(Long FolderId) {
+    public FolderFileResponseDTO getFileByFolderId(Long FolderId) {
         List<File> files = folderRepository.findByFolderId(FolderId);
 
-            List<FolderFileResponseDTO> list = new ArrayList<>();
+        List<FolderFileResponseDTO.FileDTO> responseFiles = files.stream()
+                //.map(folderMapper::fileToFolderFileResponseDTO)
+                .map(folderMapper::fileToFolderFileResponseDTO)
+                .toList();
 
-            for (File f : files) {
-                FolderFileResponseDTO fileDTO = folderMapper.fileToFolderFileResponseDTO(f);
-                list.add(fileDTO);
-            }
-            return list;
+        return FolderFileResponseDTO.builder()
+                .files(responseFiles)
+                .build();
+        /*
+        List<FolderFileResponseDTO> list = new ArrayList<>();
+        FolderFileResponseDTO.FileDTO
+        for (File f : files) {
+            folderMapper.fileToFolderFileResponseDTO(f);
+            list.add
+                    (fileDTO);
+        }
+        return list;
+        */
     }
 }
 

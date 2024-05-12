@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 @Component
 public class FolderMapper {
 
-    public FolderFileResponseDTO fileToFolderFileResponseDTO(File file) {
+    public FolderFileResponseDTO.FileDTO fileToFolderFileResponseDTO(File file) {
 
         Long id = file.getId();
         String name = file.getName();
@@ -17,7 +17,7 @@ public class FolderMapper {
         Long size = file.getSize();
         LocalDateTime date = file.getCreated_date();
 
-        return FolderFileResponseDTO.builder()
+        return FolderFileResponseDTO.FileDTO.builder()
                 .file_id(id)
                 .file_name(name)
                 .file_type(type)

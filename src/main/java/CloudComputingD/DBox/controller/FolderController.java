@@ -9,7 +9,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 
 @RequiredArgsConstructor
 @RequestMapping("/folder")
@@ -27,11 +26,10 @@ public class FolderController {
     }
 
     @GetMapping("/{folderId}")
-    public ResponseEntity<List<FolderFileResponseDTO>> getFiles(
+    public ResponseEntity<FolderFileResponseDTO> getFiles(
             @PathVariable("folderId") Long folderId
     ) {
-        List<FolderFileResponseDTO> fileResponseDTOs = folderService.getFileByFolderId(folderId);
-
+        FolderFileResponseDTO fileResponseDTOs = folderService.getFileByFolderId(folderId);
         return new ResponseEntity<>(fileResponseDTOs, HttpStatus.OK);
     }
 }
