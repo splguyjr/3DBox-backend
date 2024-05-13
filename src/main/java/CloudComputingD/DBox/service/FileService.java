@@ -2,16 +2,29 @@ package CloudComputingD.DBox.service;
 
 import CloudComputingD.DBox.entity.File;
 import CloudComputingD.DBox.repository.FileRepository;
+import com.amazonaws.AmazonClientException;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3Client;
+import com.amazonaws.services.s3.model.GetObjectRequest;
 import com.amazonaws.services.s3.model.ObjectMetadata;
+import com.amazonaws.services.s3.model.S3Object;
+import com.amazonaws.services.s3.model.S3ObjectInputStream;
+import com.amazonaws.util.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.UrlResource;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.URLEncoder;
+import java.net.http.HttpHeaders;
 import java.time.LocalDateTime;
 
 @Service
@@ -98,4 +111,20 @@ public class FileService {
         fileRepository.save(file);
         return fileId;
     }
+
+    /**
+     * 파일 영구 삭제
+     */
+    @Transactional
+    public Integer deleteFile(Integer fileId) {
+        File file = fileRepository.findById(fileId);
+        String fileName = file.getName();
+        amazonS3Client.deleteObject(bucket, fileName);
+        return fileId;
+    }
+
+    /**
+     * 파일 다운로드
+     */
+
 }

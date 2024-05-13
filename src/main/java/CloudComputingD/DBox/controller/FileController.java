@@ -1,13 +1,18 @@
 package CloudComputingD.DBox.controller;
 
+import CloudComputingD.DBox.entity.File;
 import CloudComputingD.DBox.service.FileService;
-import org.hibernate.annotations.Parameter;
+import lombok.val;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.UrlResource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
 
@@ -55,4 +60,13 @@ public class FileController {
     ) {
         return ResponseEntity.ok(fileService.restoreFile(fileId));
     }
+
+    @DeleteMapping(value="/file/delete/{fileId}")
+    public ResponseEntity<Integer> deleteFile(
+            @PathVariable("fileId") Integer fileId
+    ) {
+        return ResponseEntity.ok(fileService.deleteFile(fileId));
+    }
+
+
 }
