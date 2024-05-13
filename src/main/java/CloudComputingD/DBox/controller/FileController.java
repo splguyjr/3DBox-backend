@@ -68,5 +68,16 @@ public class FileController {
         return ResponseEntity.ok(fileService.deleteFile(fileId));
     }
 
+    @GetMapping(value="/file/download/{fileId}")
+    public ResponseEntity<?> downloadFile(
+            @PathVariable("fileId") Integer fileId
+    ) throws IOException {
+        String fileName = fileService.getFileName(fileId);
+        ByteArrayOutputStream body = fileService.downloadFile(fileName);
 
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + fileName + "\"")
+                .contentType(MediaType.MULTIPART_FORM_DATA)
+                .body(body.toByteArray());
+    }
 }

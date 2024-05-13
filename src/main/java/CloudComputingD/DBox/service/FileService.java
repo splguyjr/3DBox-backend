@@ -13,6 +13,7 @@ import com.amazonaws.util.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.UrlResource;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -24,7 +25,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URLEncoder;
-import java.net.http.HttpHeaders;
 import java.time.LocalDateTime;
 
 @Service
@@ -126,5 +126,23 @@ public class FileService {
     /**
      * 파일 다운로드
      */
+    @Transactional
+    public ByteArrayOutputStream downloadFile(String fileName) throws IOException {
+        S3Object s3Object = amazonS3Client.getObject(bucket, fileName);
+        InputStream inputStream = s3Object.getObjectContent();
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 
+        int len;
+        byte[] buffer = new byte[4096];
+        while ((len = inputStream.read(buffer, 0, buffer.length)) != -1) {
+            outputStream.write(buffer, 0, len);
+        }
+        return outputStream;
+    }
+
+    @Transactional
+    public String getFileName(Integer fileId) {
+        File file = fileRepository.findById(fileId);
+        return file.getName();
+    }
 }
