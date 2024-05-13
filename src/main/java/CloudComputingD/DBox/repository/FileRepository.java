@@ -17,5 +17,11 @@ public class FileRepository {
     public File findById(Integer id) {
         return em.find(File.class, id);
     }
+
+    public void deleteById(Integer id) {
+        File file = em.find(File.class, id);
+        em.remove(file);
+    }
+
 //    public List<File> findByUser(User user);
 }

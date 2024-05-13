@@ -119,7 +119,11 @@ public class FileService {
     public Integer deleteFile(Integer fileId) {
         File file = fileRepository.findById(fileId);
         String fileName = file.getName();
+        // S3 버킷에서 객체(파일) 삭제
         amazonS3Client.deleteObject(bucket, fileName);
+        // DB에서 파일 정보 삭제
+        fileRepository.deleteById(fileId);
+
         return fileId;
     }
 
