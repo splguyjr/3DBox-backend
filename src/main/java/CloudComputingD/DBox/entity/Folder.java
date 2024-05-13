@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import jakarta.validation.groups.Default;
 import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
+import org.hibernate.annotations.DynamicInsert;
+
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -11,6 +13,7 @@ import java.util.List;
 
 @Entity
 @Getter
+@DynamicInsert
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
@@ -43,7 +46,8 @@ public class Folder {
     private LocalDateTime deleted_date;
 
     @Column
-    private Boolean is_deleted = false;
+    @ColumnDefault("false")
+    private Boolean is_deleted;
 
 
 }

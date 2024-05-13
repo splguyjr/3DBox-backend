@@ -1,5 +1,6 @@
 package CloudComputingD.DBox.service;
 
+import CloudComputingD.DBox.dto.FolderChildResponseDTO;
 import CloudComputingD.DBox.dto.FolderFileResponseDTO;
 import CloudComputingD.DBox.entity.File;
 import CloudComputingD.DBox.entity.Folder;
@@ -56,6 +57,18 @@ public class FolderService {
         }
         return list;
         */
+    }
+
+    public FolderChildResponseDTO getFoldersByParentId(Long folderId) {
+        List<Folder> folders = folderRepository.findAllByParent_id(folderId);
+
+        List<FolderChildResponseDTO.FolderDTO> responseFolders = folders.stream()
+                .map(folderMapper::folderToFolderChildResponseDTO)
+                .toList();
+
+        return FolderChildResponseDTO.builder()
+                .folders(responseFolders)
+                .build();
     }
 }
 
