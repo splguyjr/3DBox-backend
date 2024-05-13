@@ -83,8 +83,14 @@ public class FileService {
     @Transactional
     public String renameFile(Integer fileId, String newName) {
         File file = fileRepository.findById(fileId);
+        String originalFilename = file.getName();
+        // 이미 생성한 것은 변경 불가, S3버킷에서 파일 복사 후 기존 파일 삭제
+        amazonS3Client.copyObject(bucket, originalFilename, bucket, newName);
+        amazonS3Client.deleteObject(bucket, originalFilename);
+        // DB에서 파일 이름 수정
         file.setName(newName);
         fileRepository.save(file);
+
         return newName;
     }
 
@@ -119,7 +125,7 @@ public class FileService {
     public Integer deleteFile(Integer fileId) {
         File file = fileRepository.findById(fileId);
         String fileName = file.getName();
-        // S3 버킷에서 객체(파일) 삭제
+        // S3버킷에서 객체(파일) 삭제
         amazonS3Client.deleteObject(bucket, fileName);
         // DB에서 파일 정보 삭제
         fileRepository.deleteById(fileId);
