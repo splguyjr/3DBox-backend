@@ -1,6 +1,7 @@
 package CloudComputingD.DBox.controller;
 
 
+import CloudComputingD.DBox.dto.FolderChildResponseDTO;
 import CloudComputingD.DBox.dto.FolderFileResponseDTO;
 import CloudComputingD.DBox.entity.File;
 import CloudComputingD.DBox.service.FolderService;
@@ -29,7 +30,15 @@ public class FolderController {
     public ResponseEntity<FolderFileResponseDTO> getFiles(
             @PathVariable("folderId") Long folderId
     ) {
-        FolderFileResponseDTO fileResponseDTOs = folderService.getFileByFolderId(folderId);
-        return new ResponseEntity<>(fileResponseDTOs, HttpStatus.OK);
+        FolderFileResponseDTO folderFileResponseDTO = folderService.getFileByFolderId(folderId);
+        return new ResponseEntity<>(folderFileResponseDTO, HttpStatus.OK);
+    }
+
+    @GetMapping("/child/{folderId}")
+    public ResponseEntity<FolderChildResponseDTO> getChildFolders(
+            @PathVariable("folderId") Long folderId
+    ) {
+        FolderChildResponseDTO folderChildResponseDTO = folderService.getFoldersByParentId(folderId);
+        return new ResponseEntity<>(folderChildResponseDTO, HttpStatus.OK);
     }
 }

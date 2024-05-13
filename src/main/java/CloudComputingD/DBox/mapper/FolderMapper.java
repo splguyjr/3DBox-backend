@@ -1,7 +1,9 @@
 package CloudComputingD.DBox.mapper;
 
+import CloudComputingD.DBox.dto.FolderChildResponseDTO;
 import CloudComputingD.DBox.dto.FolderFileResponseDTO;
 import CloudComputingD.DBox.entity.File;
+import CloudComputingD.DBox.entity.Folder;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
@@ -23,6 +25,17 @@ public class FolderMapper {
                 .file_type(type)
                 .file_size(size)
                 .created_date(date)
+                .build();
+    }
+
+    public FolderChildResponseDTO.FolderDTO folderToFolderChildResponseDTO(Folder folder) {
+
+        Long id = folder.getId();
+        String name = folder.getName();
+
+        return FolderChildResponseDTO.FolderDTO.builder()
+                .folder_id(id)
+                .folder_name(name)
                 .build();
     }
 }
