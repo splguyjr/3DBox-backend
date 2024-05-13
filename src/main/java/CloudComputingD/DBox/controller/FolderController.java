@@ -41,4 +41,15 @@ public class FolderController {
         FolderChildResponseDTO folderChildResponseDTO = folderService.getFoldersByParentId(folderId);
         return new ResponseEntity<>(folderChildResponseDTO, HttpStatus.OK);
     }
+
+    @PatchMapping("/{folderId}/name/{folderName}")
+    public ResponseEntity<HttpStatus> changeFolderName(
+            @PathVariable("folderId") Long folderId,
+            @PathVariable("folderName") String folderName
+    ) {
+        folderService.changeFolderName(folderId, folderName);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+
 }

@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Getter
+@Data
 @DynamicInsert
 @AllArgsConstructor
 @NoArgsConstructor
@@ -22,8 +22,7 @@ public class Folder {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToMany(fetch = FetchType.EAGER)
-    @JoinColumn(name = "folder_id")
+    @OneToMany(mappedBy = "folder", fetch = FetchType.LAZY)
     @ToString.Exclude
     private List<File> files = new ArrayList<>();
 
