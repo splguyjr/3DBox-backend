@@ -77,5 +77,13 @@ public class FolderService {
         folder.setName(folderName);
         folderRepository.save(folder);
     }
+
+    public void moveFolderToTrash(Long folderId) {
+        Folder folder = folderRepository.findByFolderId(folderId);
+        folder.setIs_deleted(true);
+        folderRepository.save(folder);
+    }
+
+
 }
 
