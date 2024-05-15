@@ -60,4 +60,12 @@ public class FolderController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
+    @PatchMapping("/restore/{folderId}")
+    public ResponseEntity<HttpStatus> restoreFolderFromTrash(
+            @PathVariable("folderId") Long folderId
+    ) {
+        folderService.restoreFolderFromTrash(folderId);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
 }
