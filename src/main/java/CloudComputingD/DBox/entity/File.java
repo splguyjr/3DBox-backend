@@ -54,8 +54,24 @@ public class File {
     @ToString.Exclude
     private Folder folder;
 
+    public String getName() {
+        return name;
+    }
+  
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public Long getSize() {
+        return size;
+    }
+
+    public LocalDateTime getCreated_date() {
+        return created_date;
     }
 
     public void setDeleted_date(LocalDateTime deleted_date) {
