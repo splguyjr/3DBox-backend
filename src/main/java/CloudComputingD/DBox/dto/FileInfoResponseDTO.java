@@ -15,7 +15,7 @@ public class FileInfoResponseDTO {
     static public class Info {
             String name;
             String type;
-            Integer size;
+            Long size;
             LocalDateTime created_date;
 
         public static FileInfoResponseDTO.Info of(File file) {

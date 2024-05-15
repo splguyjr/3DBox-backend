@@ -15,7 +15,7 @@ import java.time.LocalDateTime;
 public class File {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column
-    private Integer id;
+    private Long id;
 
     @Column(nullable = false)
     private String name;
@@ -24,7 +24,7 @@ public class File {
     private String type;
 
     @Column(nullable = false)
-    private Integer size;
+    private Long size;
 
     @Column
     private String parent_id;
@@ -62,7 +62,7 @@ public class File {
         return type;
     }
 
-    public Integer getSize() {
+    public Long getSize() {
         return size;
     }
 

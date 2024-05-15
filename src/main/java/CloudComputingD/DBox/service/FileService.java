@@ -71,7 +71,7 @@ public class FileService {
                     File.builder()
                             .name(originalFilename)
                             .type(multipartFile.getContentType())
-                            .size((int)multipartFile.getSize())
+                            .size((Long) multipartFile.getSize())
                             .created_date(LocalDateTime.now())
                             .s3_key(amazonS3Client.getUrl(bucket, originalFilename).toString())
                             .build()
@@ -83,7 +83,7 @@ public class FileService {
      * 파일 정보 조회
      */
     @Transactional(readOnly = true)
-    public FileInfoResponseDTO.Info getFileById(Integer fileId){
+    public FileInfoResponseDTO.Info getFileById(Long fileId){
         return FileInfoResponseDTO.Info.of(fileRepository.findById(fileId));
     }
 
@@ -91,7 +91,7 @@ public class FileService {
      * 파일 이름 수정
      */
     @Transactional
-    public String renameFile(Integer fileId, String newName) {
+    public void renameFile(Long fileId, String newName) {
         File file = fileRepository.findById(fileId);
         String originalFilename = file.getName();
         // 이미 생성한 것은 변경 불가, S3버킷에서 파일 복사 후 기존 파일 삭제
@@ -100,47 +100,41 @@ public class FileService {
         // DB에서 파일 이름 수정
         file.setName(newName);
         fileRepository.save(file);
-
-        return newName;
     }
 
     /**
      * 파일 휴지통 이동
      */
     @Transactional
-    public Integer trashFile(Integer fileId) {
+    public void trashFile(Long fileId) {
         File file = fileRepository.findById(fileId);
         file.setIs_deleted(true);
         file.setDeleted_date(LocalDateTime.now());
         fileRepository.save(file);
-        return fileId;
     }
 
     /**
      * 파일 복원
      */
     @Transactional
-    public Integer restoreFile(Integer fileId) {
+    public void restoreFile(Long fileId) {
         File file = fileRepository.findById(fileId);
         file.setIs_deleted(false);
         file.setDeleted_date(null);
         fileRepository.save(file);
-        return fileId;
     }
 
     /**
      * 파일 영구 삭제
      */
     @Transactional
-    public Integer deleteFile(Integer fileId) {
+    public void deleteFile(Long fileId) {
         File file = fileRepository.findById(fileId);
         String fileName = file.getName();
         // S3버킷에서 객체(파일) 삭제
         amazonS3Client.deleteObject(bucket, fileName);
         // DB에서 파일 정보 삭제
         fileRepository.deleteById(fileId);
-
-        return fileId;
     }
 
     /**
@@ -161,7 +155,7 @@ public class FileService {
     }
 
     @Transactional
-    public String getFileName(Integer fileId) {
+    public String getFileName(Long fileId) {
         File file = fileRepository.findById(fileId);
         return file.getName();
     }

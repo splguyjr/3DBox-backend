@@ -36,14 +36,14 @@ public class FileController {
 
     @GetMapping(value = "/file/{fileId}")
     public ResponseEntity<?> getFile(
-            @PathVariable("fileId") Integer fileId
+            @PathVariable("fileId") Long fileId
     ) {
         return new ResponseEntity<>(fileService.getFileById(fileId), HttpStatus.OK);
     }
 
     @PatchMapping(value="/file/{fileId}/name/{fileName}")
     public ResponseEntity<HttpStatus> renameFile(
-            @PathVariable("fileId") Integer fileId,
+            @PathVariable("fileId") Long fileId,
             @PathVariable("fileName") String newName
     ){
         fileService.renameFile(fileId, newName);
@@ -52,7 +52,7 @@ public class FileController {
 
     @PatchMapping(value="/file/trash/{fileId}")
     public ResponseEntity<HttpStatus> trashFile(
-            @PathVariable("fileId") Integer fileId
+            @PathVariable("fileId") Long fileId
     ) {
         fileService.trashFile(fileId);
         return new ResponseEntity<>(HttpStatus.OK);
@@ -60,7 +60,7 @@ public class FileController {
 
     @PatchMapping(value="/file/restore/{fileId}")
     public ResponseEntity<HttpStatus> restoreFile(
-            @PathVariable("fileId") Integer fileId
+            @PathVariable("fileId") Long fileId
     ) {
         fileService.restoreFile(fileId);
         return new ResponseEntity<>(HttpStatus.OK);
@@ -68,7 +68,7 @@ public class FileController {
 
     @DeleteMapping(value="/file/delete/{fileId}")
     public ResponseEntity<HttpStatus> deleteFile(
-            @PathVariable("fileId") Integer fileId
+            @PathVariable("fileId") Long fileId
     ) {
         fileService.deleteFile(fileId);
         return new ResponseEntity<>(HttpStatus.OK);
@@ -76,7 +76,7 @@ public class FileController {
 
     @GetMapping(value="/file/download/{fileId}")
     public ResponseEntity<?> downloadFile(
-            @PathVariable("fileId") Integer fileId
+            @PathVariable("fileId") Long fileId
     ) throws IOException {
         String fileName = fileService.getFileName(fileId);
         ByteArrayOutputStream body = fileService.downloadFile(fileName);

@@ -14,11 +14,11 @@ public class FileRepository {
     public void save(File file) {
         em.persist(file);
     }
-    public File findById(Integer id) {
+    public File findById(Long id) {
         return em.find(File.class, id);
     }
 
-    public void deleteById(Integer id) {
+    public void deleteById(Long id) {
         File file = em.find(File.class, id);
         em.remove(file);
     }
