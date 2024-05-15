@@ -27,6 +27,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URLEncoder;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Service
 public class FileService {
@@ -50,24 +51,32 @@ public class FileService {
      * 파일 업로드
      */
     @Transactional
-    public void uploadFile(MultipartFile multipartFile) throws IOException {
-        String originalFilename = multipartFile.getOriginalFilename();
+    public void uploadFile(List<MultipartFile> multipartFiles) {
 
-        ObjectMetadata metadata = new ObjectMetadata();
-        metadata.setContentLength(multipartFile.getSize());
-        metadata.setContentType(multipartFile.getContentType());
+        multipartFiles.forEach(multipartFile -> {
 
-        amazonS3Client.putObject(bucket, originalFilename, multipartFile.getInputStream(), metadata);
+            String originalFilename = multipartFile.getOriginalFilename();
 
-        fileRepository.save(
-                File.builder()
-                        .name(originalFilename)
-                        .type(multipartFile.getContentType())
-                        .size((int)multipartFile.getSize())
-                        .created_date(LocalDateTime.now())
-                        .s3_key(amazonS3Client.getUrl(bucket, originalFilename).toString())
-                        .build()
-        );
+            ObjectMetadata metadata = new ObjectMetadata();
+            metadata.setContentLength(multipartFile.getSize());
+            metadata.setContentType(multipartFile.getContentType());
+
+            try {
+                amazonS3Client.putObject(bucket, originalFilename, multipartFile.getInputStream(), metadata);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+
+            fileRepository.save(
+                    File.builder()
+                            .name(originalFilename)
+                            .type(multipartFile.getContentType())
+                            .size((int)multipartFile.getSize())
+                            .created_date(LocalDateTime.now())
+                            .s3_key(amazonS3Client.getUrl(bucket, originalFilename).toString())
+                            .build()
+            );
+        });
     }
 
     /**

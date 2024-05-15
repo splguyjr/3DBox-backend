@@ -15,6 +15,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.List;
 
 
 @Controller
@@ -27,9 +28,9 @@ public class FileController {
 
     @PostMapping(value = "/file/upload")
     public ResponseEntity<HttpStatus> uploadFile(
-            @RequestParam("file") MultipartFile multipartFile
+            @RequestParam("file") List<MultipartFile> multipartFiles
     ) throws IOException {
-        fileService.uploadFile(multipartFile);
+        fileService.uploadFile(multipartFiles);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
