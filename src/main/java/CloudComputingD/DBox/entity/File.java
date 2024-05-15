@@ -58,6 +58,18 @@ public class File {
         this.name = name;
     }
 
+    public String getType() {
+        return type;
+    }
+
+    public Integer getSize() {
+        return size;
+    }
+
+    public LocalDateTime getCreated_date() {
+        return created_date;
+    }
+
     public void setDeleted_date(LocalDateTime deleted_date) {
         this.deleted_date = deleted_date;
     }

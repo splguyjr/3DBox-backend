@@ -2,6 +2,7 @@ package CloudComputingD.DBox.service;
 
 import CloudComputingD.DBox.entity.File;
 import CloudComputingD.DBox.repository.FileRepository;
+import CloudComputingD.DBox.dto.FileInfoResponseDTO;
 import com.amazonaws.AmazonClientException;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3Client;
@@ -73,8 +74,8 @@ public class FileService {
      * 파일 정보 조회
      */
     @Transactional(readOnly = true)
-    public File getFileById(Integer fileId){
-        return fileRepository.findById(fileId);
+    public FileInfoResponseDTO.Info getFileById(Integer fileId){
+        return FileInfoResponseDTO.Info.of(fileRepository.findById(fileId));
     }
 
     /**

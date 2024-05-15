@@ -6,6 +6,7 @@ import lombok.val;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.UrlResource;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -25,47 +26,51 @@ public class FileController {
     }
 
     @PostMapping(value = "/file/upload")
-    public ResponseEntity<String> uploadFile(
+    public ResponseEntity<HttpStatus> uploadFile(
             @RequestParam("file") MultipartFile multipartFile
     ) throws IOException {
         fileService.uploadFile(multipartFile);
-        return ResponseEntity.ok().build();
+        return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
     @GetMapping(value = "/file/{fileId}")
-    public ResponseEntity<?> getFileById(
+    public ResponseEntity<?> getFile(
             @PathVariable("fileId") Integer fileId
     ) {
-        return ResponseEntity.ok(fileService.getFileById(fileId));
+        return new ResponseEntity<>(fileService.getFileById(fileId), HttpStatus.OK);
     }
 
     @PatchMapping(value="/file/{fileId}/name/{fileName}")
-    public ResponseEntity<String> renameFile(
+    public ResponseEntity<HttpStatus> renameFile(
             @PathVariable("fileId") Integer fileId,
             @PathVariable("fileName") String newName
     ){
-        return ResponseEntity.ok(fileService.renameFile(fileId, newName));
+        fileService.renameFile(fileId, newName);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @PatchMapping(value="/file/trash/{fileId}")
-    public ResponseEntity<Integer> trashFile(
+    public ResponseEntity<HttpStatus> trashFile(
             @PathVariable("fileId") Integer fileId
     ) {
-        return ResponseEntity.ok(fileService.trashFile(fileId));
+        fileService.trashFile(fileId);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @PatchMapping(value="/file/restore/{fileId}")
-    public ResponseEntity<Integer> restoreFile(
+    public ResponseEntity<HttpStatus> restoreFile(
             @PathVariable("fileId") Integer fileId
     ) {
-        return ResponseEntity.ok(fileService.restoreFile(fileId));
+        fileService.restoreFile(fileId);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @DeleteMapping(value="/file/delete/{fileId}")
-    public ResponseEntity<Integer> deleteFile(
+    public ResponseEntity<HttpStatus> deleteFile(
             @PathVariable("fileId") Integer fileId
     ) {
-        return ResponseEntity.ok(fileService.deleteFile(fileId));
+        fileService.deleteFile(fileId);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @GetMapping(value="/file/download/{fileId}")
