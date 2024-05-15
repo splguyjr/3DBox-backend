@@ -68,4 +68,12 @@ public class FolderController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
+    @DeleteMapping("/delete/{folderId}")
+    public ResponseEntity<HttpStatus> deleteFolderPermanently(
+            @PathVariable("folderId") Long folderId
+    ) {
+        folderService.deleteFolderFromTrash(folderId);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
 }

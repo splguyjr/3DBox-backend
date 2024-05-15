@@ -90,6 +90,11 @@ public class FolderService {
         folderRepository.save(folder);
     }
 
+    public void deleteFolderFromTrash(Long folderId) {
+        Folder folder = folderRepository.findByFolderId(folderId);
+        folderRepository.delete(folder);
+    }
+
 
 }
 
