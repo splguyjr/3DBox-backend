@@ -39,6 +39,7 @@ public class FolderController {
             @PathVariable("folderId") Long folderId
     ) {
         FolderChildResponseDTO folderChildResponseDTO = folderService.getFoldersByParentId(folderId);
+
         return new ResponseEntity<>(folderChildResponseDTO, HttpStatus.OK);
     }
 
@@ -51,5 +52,28 @@ public class FolderController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
+    @PatchMapping("/trash/{folderId}")
+    public ResponseEntity<HttpStatus> moveFolderToTrash(
+            @PathVariable("folderId") Long folderId
+    ) {
+        folderService.moveFolderToTrash(folderId);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @PatchMapping("/restore/{folderId}")
+    public ResponseEntity<HttpStatus> restoreFolderFromTrash(
+            @PathVariable("folderId") Long folderId
+    ) {
+        folderService.restoreFolderFromTrash(folderId);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @DeleteMapping("/delete/{folderId}")
+    public ResponseEntity<HttpStatus> deleteFolderPermanently(
+            @PathVariable("folderId") Long folderId
+    ) {
+        folderService.deleteFolderFromTrash(folderId);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
 
 }
