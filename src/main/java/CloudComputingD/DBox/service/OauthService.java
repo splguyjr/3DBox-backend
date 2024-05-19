@@ -26,4 +26,11 @@ public class OauthService {
                 .orElseGet(() -> oauthMemberRepository.save(user));
         return saved.oauthId().oauthServerId();
     }
+
+    public String getProfileImageLink(String oauthServerId) {
+        User user = oauthMemberRepository.findByOauthServerId(oauthServerId);
+        return user.profileImageUrl();
+    }
+
+
 }
