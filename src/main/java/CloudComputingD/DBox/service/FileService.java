@@ -1,8 +1,10 @@
 package CloudComputingD.DBox.service;
 
 import CloudComputingD.DBox.entity.File;
+import CloudComputingD.DBox.entity.Folder;
 import CloudComputingD.DBox.repository.FileRepository;
 import CloudComputingD.DBox.dto.FileInfoResponseDTO;
+import CloudComputingD.DBox.repository.FolderRepository;
 import com.amazonaws.AmazonClientException;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3Client;
@@ -32,11 +34,13 @@ import java.util.List;
 @Service
 public class FileService {
     private final FileRepository fileRepository;
+    private final FolderRepository folderRepository;
     private AmazonS3Client amazonS3Client;
 
     @Autowired
-    public FileService(FileRepository fileRepository) {
+    public FileService(FileRepository fileRepository, FolderRepository folderRepository) {
         this.fileRepository = fileRepository;
+        this.folderRepository = folderRepository;
     }
     @Autowired
     public void setS3Client(AmazonS3Client amazonS3Client) {
@@ -51,7 +55,7 @@ public class FileService {
      * 파일 업로드
      */
     @Transactional
-    public void uploadFile(List<MultipartFile> multipartFiles) {
+    public void uploadFile(Long folderId, List<MultipartFile> multipartFiles) {
 
         multipartFiles.forEach(multipartFile -> {
 
@@ -159,4 +163,16 @@ public class FileService {
         File file = fileRepository.findById(fileId);
         return file.getName();
     }
+
+    /**
+     * 파일 이동
+     */
+    @Transactional
+    public void moveFile(Long fileId, Long folderId) {
+        File file = fileRepository.findById(fileId);
+        Folder folder = folderRepository.findByFolderId(folderId);
+        file.setFolder(folder);
+    }
+
+
 }

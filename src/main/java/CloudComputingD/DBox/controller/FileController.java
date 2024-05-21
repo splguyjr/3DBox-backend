@@ -26,11 +26,12 @@ public class FileController {
         this.fileService = fileService;
     }
 
-    @PostMapping(value = "/file/upload")
+    @PostMapping(value = "/file/upload/{folderId}")
     public ResponseEntity<HttpStatus> uploadFile(
+            @PathVariable("folderId") Long folderId,
             @RequestParam("file") List<MultipartFile> multipartFiles
     ) throws IOException {
-        fileService.uploadFile(multipartFiles);
+        fileService.uploadFile(folderId, multipartFiles);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
@@ -85,5 +86,14 @@ public class FileController {
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + fileName + "\"")
                 .contentType(MediaType.MULTIPART_FORM_DATA)
                 .body(body.toByteArray());
+    }
+
+    @PatchMapping(value="/file/move/{fileId}/{folderId}")
+    public ResponseEntity<HttpStatus> moveFile(
+            @PathVariable("fileId") Long fileId,
+            @PathVariable("folderId") Long folderId
+    ) {
+        fileService.moveFile(fileId, folderId);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }
