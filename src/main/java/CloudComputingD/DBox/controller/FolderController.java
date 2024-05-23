@@ -2,8 +2,8 @@ package CloudComputingD.DBox.controller;
 
 
 import CloudComputingD.DBox.dto.FolderChildResponseDTO;
+import CloudComputingD.DBox.dto.FolderCreateRequestDTO;
 import CloudComputingD.DBox.dto.FolderFileResponseDTO;
-import CloudComputingD.DBox.entity.File;
 import CloudComputingD.DBox.service.FolderService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -18,11 +18,11 @@ public class FolderController {
 
     private final FolderService folderService;
 
-    @PostMapping("/create/{folderName}")
+    @PostMapping("/create/")
     public ResponseEntity<HttpStatus> createFolder(
-            @PathVariable("folderName") String folderName
+            @RequestBody FolderCreateRequestDTO folderCreateRequestDTO
     ) {
-        folderService.createFolder(folderName);
+        folderService.createFolder(folderCreateRequestDTO);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 

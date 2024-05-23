@@ -1,6 +1,7 @@
 package CloudComputingD.DBox.service;
 
 import CloudComputingD.DBox.dto.FolderChildResponseDTO;
+import CloudComputingD.DBox.dto.FolderCreateRequestDTO;
 import CloudComputingD.DBox.dto.FolderFileResponseDTO;
 import CloudComputingD.DBox.entity.File;
 import CloudComputingD.DBox.entity.Folder;
@@ -11,7 +12,6 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 
 
 @Service
@@ -29,10 +29,16 @@ public class FolderService {
         return folderRepository.findById(folderId).orElse(null);
     }
 
-    public void createFolder(String folderName) {
+    public void createFolder(FolderCreateRequestDTO folderCreateRequestDTO) {
+        String folderName = folderCreateRequestDTO.folderName();
+        Long userId = folderCreateRequestDTO.userId();
+        Long parentId = folderCreateRequestDTO.parentId();
+
         folderRepository.save(Folder.builder()
                 .name(folderName)
                 .created_date(LocalDateTime.now())
+                .user_id(userId)
+                .parent_id(parentId)
                 .build());
     }
 
