@@ -26,14 +26,17 @@ public class FileController {
         this.fileService = fileService;
     }
 
-    @PostMapping(value = "/file/upload")
+    // 파일 업로드
+    @PostMapping(value = "/file/upload/{folderId}")
     public ResponseEntity<HttpStatus> uploadFile(
-            @RequestParam("file") List<MultipartFile> multipartFiles
+            @PathVariable("folderId") Long folderId,
+            @RequestParam("files") List<MultipartFile> multipartFiles
     ) throws IOException {
-        fileService.uploadFile(multipartFiles);
+        fileService.uploadFile(folderId, multipartFiles);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
+    // 파일 정보 조회
     @GetMapping(value = "/file/{fileId}")
     public ResponseEntity<?> getFile(
             @PathVariable("fileId") Long fileId
@@ -41,6 +44,7 @@ public class FileController {
         return new ResponseEntity<>(fileService.getFileById(fileId), HttpStatus.OK);
     }
 
+    // 파일 이름 수정
     @PatchMapping(value="/file/{fileId}/name/{fileName}")
     public ResponseEntity<HttpStatus> renameFile(
             @PathVariable("fileId") Long fileId,
@@ -50,6 +54,7 @@ public class FileController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
+    // 파일 휴지통 이동
     @PatchMapping(value="/file/trash/{fileId}")
     public ResponseEntity<HttpStatus> trashFile(
             @PathVariable("fileId") Long fileId
@@ -58,6 +63,7 @@ public class FileController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
+    // 파일 복원
     @PatchMapping(value="/file/restore/{fileId}")
     public ResponseEntity<HttpStatus> restoreFile(
             @PathVariable("fileId") Long fileId
@@ -66,6 +72,7 @@ public class FileController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
+    // 파일 영구 삭제
     @DeleteMapping(value="/file/delete/{fileId}")
     public ResponseEntity<HttpStatus> deleteFile(
             @PathVariable("fileId") Long fileId
@@ -74,16 +81,38 @@ public class FileController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
+    // 파일 다운로드
     @GetMapping(value="/file/download/{fileId}")
     public ResponseEntity<?> downloadFile(
             @PathVariable("fileId") Long fileId
     ) throws IOException {
+        ByteArrayOutputStream body = fileService.downloadFile(fileId);
+
         String fileName = fileService.getFileName(fileId);
-        ByteArrayOutputStream body = fileService.downloadFile(fileName);
 
         return ResponseEntity.ok()
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + fileName + "\"")
                 .contentType(MediaType.MULTIPART_FORM_DATA)
                 .body(body.toByteArray());
+    }
+
+    // 파일 이동
+    @PatchMapping(value="/file/move/{fileId}/{folderId}")
+    public ResponseEntity<HttpStatus> moveFile(
+            @PathVariable("fileId") Long fileId,
+            @PathVariable("folderId") Long folderId
+    ) {
+        fileService.moveFile(fileId, folderId);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    // 파일 복사
+    @PostMapping(value="/file/copy/{fileId}/{folderId}")
+    public ResponseEntity<HttpStatus> copyFile(
+            @PathVariable("fileId") Long fileId,
+            @PathVariable("folderId") Long folderId
+    ) {
+        fileService.copyFile(fileId, folderId);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }
