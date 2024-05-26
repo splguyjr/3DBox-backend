@@ -174,5 +174,29 @@ public class FileService {
         file.setFolder(folder);
     }
 
+    /**
+     * 파일 복사
+     */
+    @Transactional
+    public void copyFile(Long fileId, Long folderId) {
+        File file = fileRepository.findById(fileId);
+        Folder folder = folderRepository.findByFolderId(folderId);
+        String originalFilename = file.getName();
+        String newName = 'c' + originalFilename;
+        // S3버킷에서 파일 복사
+        amazonS3Client.copyObject(bucket, originalFilename, bucket, newName);
+        // 복사 파일 저장
+        fileRepository.save(
+                File.builder()
+                        .name(newName)
+                        .type(file.getType())
+                        .size(file.getSize())
+                        .created_date(LocalDateTime.now())
+                        .s3_key(amazonS3Client.getUrl(bucket, newName).toString())
+                        .folder(folder)
+                        .build()
+        );
+    }
+
 
 }

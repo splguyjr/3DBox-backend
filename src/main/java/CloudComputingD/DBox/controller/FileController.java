@@ -29,7 +29,7 @@ public class FileController {
     @PostMapping(value = "/file/upload/{folderId}")
     public ResponseEntity<HttpStatus> uploadFile(
             @PathVariable("folderId") Long folderId,
-            @RequestParam("file") List<MultipartFile> multipartFiles
+            @RequestParam("files") List<MultipartFile> multipartFiles
     ) throws IOException {
         fileService.uploadFile(folderId, multipartFiles);
         return new ResponseEntity<>(HttpStatus.CREATED);
@@ -94,6 +94,15 @@ public class FileController {
             @PathVariable("folderId") Long folderId
     ) {
         fileService.moveFile(fileId, folderId);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @PostMapping(value="/file/copy/{fileId}/{folderId}")
+    public ResponseEntity<HttpStatus> copyFile(
+            @PathVariable("fileId") Long fileId,
+            @PathVariable("folderId") Long folderId
+    ) {
+        fileService.copyFile(fileId, folderId);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 }
