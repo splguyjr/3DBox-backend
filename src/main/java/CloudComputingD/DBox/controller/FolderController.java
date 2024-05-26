@@ -28,7 +28,7 @@ public class FolderController {
     public ResponseEntity<FolderFileResponseDTO> getFiles(
             @PathVariable("folderId") Long folderId
     ) {
-        FolderFileResponseDTO folderFileResponseDTO = folderService.getFileByFolderId(folderId);
+        FolderFileResponseDTO folderFileResponseDTO = folderService.getFilesByFolderId(folderId);
         return new ResponseEntity<>(folderFileResponseDTO, HttpStatus.OK);
     }
 
@@ -82,5 +82,12 @@ public class FolderController {
         return new ResponseEntity<>(folderAndFileResponseDTO, HttpStatus.OK);
     }
 
+    @GetMapping("/child/{folderId}")
+    public ResponseEntity<FolderAndFileResponseDTO> getFilesAndFolders(
+            @PathVariable("folderId") Long folderId
+    ) {
+        FolderAndFileResponseDTO folderAndFileResponseDTO = folderService.getFilesAndFolders(folderId);
 
+        return new ResponseEntity<>(folderAndFileResponseDTO, HttpStatus.OK);
+    }
 }

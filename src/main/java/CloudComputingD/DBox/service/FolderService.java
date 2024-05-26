@@ -50,7 +50,7 @@ public class FolderService {
     }
 
     //folderId를 받아 해당 폴더에 속하는 File들의 list를 받아오고 mapper를 통해 ResponseDto로 변환하여 리턴
-    public FolderFileResponseDTO getFileByFolderId(Long FolderId) {
+    public FolderFileResponseDTO getFilesByFolderId(Long FolderId) {
         List<File> files = folderRepository.findFilesByFolderId(FolderId);
 
         List<FolderFileResponseDTO.FileDTO> responseFiles = files.stream()
@@ -133,5 +133,16 @@ public class FolderService {
                 .foldersInfo(folderChildResponseDTO)
                 .build();
     }
+
+    public FolderAndFileResponseDTO getFilesAndFolders(Long folderId) {
+        FolderChildResponseDTO folders = getFoldersByParentId(folderId);
+        FolderFileResponseDTO files = getFilesByFolderId(folderId);
+
+        return FolderAndFileResponseDTO.builder()
+                .foldersInfo(folders)
+                .filesInfo(files)
+                .build();
+    }
+
 }
 
