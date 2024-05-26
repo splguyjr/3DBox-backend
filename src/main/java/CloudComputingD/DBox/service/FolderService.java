@@ -1,12 +1,11 @@
 package CloudComputingD.DBox.service;
 
-import CloudComputingD.DBox.dto.FolderChildResponseDTO;
-import CloudComputingD.DBox.dto.FolderCreateRequestDTO;
-import CloudComputingD.DBox.dto.FolderFileResponseDTO;
+import CloudComputingD.DBox.dto.*;
 import CloudComputingD.DBox.entity.File;
 import CloudComputingD.DBox.entity.Folder;
 import CloudComputingD.DBox.entity.User;
 import CloudComputingD.DBox.mapper.FolderMapper;
+import CloudComputingD.DBox.repository.FileRepository;
 import CloudComputingD.DBox.repository.FolderRepository;
 import CloudComputingD.DBox.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,12 +20,14 @@ public class FolderService {
     private final FolderRepository folderRepository;
     private final FolderMapper folderMapper;
     private final UserRepository userRepository;
+    private final FileRepository fileRepository;
 
     @Autowired
-    public FolderService(FolderRepository folderRepository, FolderMapper folderMapper, UserRepository userRepository) {
+    public FolderService(FolderRepository folderRepository, FolderMapper folderMapper, UserRepository userRepository, FileRepository fileRepository) {
         this.folderRepository = folderRepository;
         this.folderMapper = folderMapper;
         this.userRepository = userRepository;
+        this.fileRepository = fileRepository;
     }
 
     public Folder getFolderInfo(Long folderId) {
@@ -53,7 +54,6 @@ public class FolderService {
         List<File> files = folderRepository.findFilesByFolderId(FolderId);
 
         List<FolderFileResponseDTO.FileDTO> responseFiles = files.stream()
-                //.map(folderMapper::fileToFolderFileResponseDTO)
                 .map(folderMapper::fileToFolderFileResponseDTO)
                 .toList();
 
@@ -107,6 +107,31 @@ public class FolderService {
         folderRepository.delete(folder);
     }
 
+    public FolderAndFileResponseDTO getTrashFilesandFolders(TrashRequestDTO trashRequestDTO) {
+        String userId = trashRequestDTO.userId();
+        List<Folder> deletedFolders = folderRepository.findDeletedFolders(userId);
+        List<File> deletedFiles = fileRepository.findDeletedFiles(userId);
 
+        List<FolderFileResponseDTO.FileDTO> fileDTOS = deletedFiles.stream()
+                .map(folderMapper::fileToFolderFileResponseDTO)
+                .toList();
+
+        FolderFileResponseDTO folderFileResponseDTO = FolderFileResponseDTO.builder()
+                .files(fileDTOS)
+                .build();
+
+        List<FolderChildResponseDTO.FolderDTO> folderDTOS = deletedFolders.stream()
+                .map(folderMapper::folderToFolderChildResponseDTO)
+                .toList();
+
+        FolderChildResponseDTO folderChildResponseDTO = FolderChildResponseDTO.builder()
+                .folders(folderDTOS)
+                .build();
+
+        return FolderAndFileResponseDTO.builder()
+                .filesInfo(folderFileResponseDTO)
+                .foldersInfo(folderChildResponseDTO)
+                .build();
+    }
 }
 

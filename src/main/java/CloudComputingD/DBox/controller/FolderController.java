@@ -1,9 +1,7 @@
 package CloudComputingD.DBox.controller;
 
 
-import CloudComputingD.DBox.dto.FolderChildResponseDTO;
-import CloudComputingD.DBox.dto.FolderCreateRequestDTO;
-import CloudComputingD.DBox.dto.FolderFileResponseDTO;
+import CloudComputingD.DBox.dto.*;
 import CloudComputingD.DBox.service.FolderService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -26,7 +24,7 @@ public class FolderController {
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
-    @GetMapping("/{folderId}")
+    @GetMapping("child/file/{folderId}")
     public ResponseEntity<FolderFileResponseDTO> getFiles(
             @PathVariable("folderId") Long folderId
     ) {
@@ -34,7 +32,7 @@ public class FolderController {
         return new ResponseEntity<>(folderFileResponseDTO, HttpStatus.OK);
     }
 
-    @GetMapping("/child/{folderId}")
+    @GetMapping("/child/folder/{folderId}")
     public ResponseEntity<FolderChildResponseDTO> getChildFolders(
             @PathVariable("folderId") Long folderId
     ) {
@@ -75,5 +73,14 @@ public class FolderController {
         folderService.deleteFolderFromTrash(folderId);
         return new ResponseEntity<>(HttpStatus.OK);
     }
+
+    @PostMapping("/trash")
+    public ResponseEntity<FolderAndFileResponseDTO> getTrashFilesAndFolders(
+            @RequestBody TrashRequestDTO trashRequestDTO
+    ) {
+        FolderAndFileResponseDTO folderAndFileResponseDTO = folderService.getTrashFilesandFolders(trashRequestDTO);
+        return new ResponseEntity<>(folderAndFileResponseDTO, HttpStatus.OK);
+    }
+
 
 }
