@@ -60,6 +60,10 @@ public class File {
     @JoinColumn(name = "folder_id", referencedColumnName = "id")
     private Folder folder;
 
+    @ManyToOne(fetch = LAZY)
+    @JoinColumn(name = "user_id", referencedColumnName = "id")
+    private User user;
+
     public String getName() {
         return name;
     }
