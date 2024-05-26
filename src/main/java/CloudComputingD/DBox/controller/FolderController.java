@@ -18,7 +18,7 @@ public class FolderController {
 
     private final FolderService folderService;
 
-    @PostMapping("/create/")
+    @PostMapping("/create")
     public ResponseEntity<HttpStatus> createFolder(
             @RequestBody FolderCreateRequestDTO folderCreateRequestDTO
     ) {

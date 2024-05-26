@@ -5,8 +5,10 @@ import CloudComputingD.DBox.dto.FolderCreateRequestDTO;
 import CloudComputingD.DBox.dto.FolderFileResponseDTO;
 import CloudComputingD.DBox.entity.File;
 import CloudComputingD.DBox.entity.Folder;
+import CloudComputingD.DBox.entity.User;
 import CloudComputingD.DBox.mapper.FolderMapper;
 import CloudComputingD.DBox.repository.FolderRepository;
+import CloudComputingD.DBox.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,11 +20,13 @@ import java.util.List;
 public class FolderService {
     private final FolderRepository folderRepository;
     private final FolderMapper folderMapper;
+    private final UserRepository userRepository;
 
     @Autowired
-    public FolderService(FolderRepository folderRepository, FolderMapper folderMapper) {
+    public FolderService(FolderRepository folderRepository, FolderMapper folderMapper, UserRepository userRepository) {
         this.folderRepository = folderRepository;
         this.folderMapper = folderMapper;
+        this.userRepository = userRepository;
     }
 
     public Folder getFolderInfo(Long folderId) {
@@ -31,14 +35,16 @@ public class FolderService {
 
     public void createFolder(FolderCreateRequestDTO folderCreateRequestDTO) {
         String folderName = folderCreateRequestDTO.folderName();
-        Long userId = folderCreateRequestDTO.userId();
+        String userId = folderCreateRequestDTO.userId();
         Long parentId = folderCreateRequestDTO.parentId();
 
+        User user = userRepository.findByOauthServerId(userId);
+        System.out.println(user.id());
         folderRepository.save(Folder.builder()
                 .name(folderName)
                 .created_date(LocalDateTime.now())
-                .user_id(userId)
                 .parent_id(parentId)
+                .user(user)
                 .build());
     }
 
