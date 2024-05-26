@@ -77,7 +77,9 @@ public class FileService {
                             .type(multipartFile.getContentType())
                             .size((Long) multipartFile.getSize())
                             .created_date(LocalDateTime.now())
+                            .is_deleted(false)
                             .s3_key(amazonS3Client.getUrl(bucket, originalFilename).toString())
+                            .folder(folderRepository.findByFolderId(folderId))
                             .build()
             );
         });

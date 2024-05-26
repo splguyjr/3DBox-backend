@@ -54,6 +54,7 @@ public class FileController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
+    // 파일 휴지통 이동
     @PatchMapping(value="/file/trash/{fileId}")
     public ResponseEntity<HttpStatus> trashFile(
             @PathVariable("fileId") Long fileId
@@ -62,6 +63,7 @@ public class FileController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
+    // 파일 복원
     @PatchMapping(value="/file/restore/{fileId}")
     public ResponseEntity<HttpStatus> restoreFile(
             @PathVariable("fileId") Long fileId
@@ -70,6 +72,7 @@ public class FileController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
+    // 파일 영구 삭제
     @DeleteMapping(value="/file/delete/{fileId}")
     public ResponseEntity<HttpStatus> deleteFile(
             @PathVariable("fileId") Long fileId
@@ -78,6 +81,7 @@ public class FileController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
+    // 파일 다운로드
     @GetMapping(value="/file/download/{fileId}")
     public ResponseEntity<?> downloadFile(
             @PathVariable("fileId") Long fileId
@@ -91,6 +95,7 @@ public class FileController {
                 .body(body.toByteArray());
     }
 
+    // 파일 이동
     @PatchMapping(value="/file/move/{fileId}/{folderId}")
     public ResponseEntity<HttpStatus> moveFile(
             @PathVariable("fileId") Long fileId,

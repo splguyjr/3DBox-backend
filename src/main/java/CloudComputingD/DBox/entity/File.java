@@ -2,6 +2,7 @@ package CloudComputingD.DBox.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.ColumnDefault;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -40,6 +41,7 @@ public class File {
     private LocalDateTime deleted_date;
 
     @Column
+    @ColumnDefault("false")
     private Boolean is_deleted;
 
     @Column(nullable = false)
