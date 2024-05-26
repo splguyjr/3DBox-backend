@@ -86,8 +86,9 @@ public class FileController {
     public ResponseEntity<?> downloadFile(
             @PathVariable("fileId") Long fileId
     ) throws IOException {
+        ByteArrayOutputStream body = fileService.downloadFile(fileId);
+
         String fileName = fileService.getFileName(fileId);
-        ByteArrayOutputStream body = fileService.downloadFile(fileName);
 
         return ResponseEntity.ok()
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + fileName + "\"")
@@ -105,6 +106,7 @@ public class FileController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
+    // 파일 복사
     @PostMapping(value="/file/copy/{fileId}/{folderId}")
     public ResponseEntity<HttpStatus> copyFile(
             @PathVariable("fileId") Long fileId,

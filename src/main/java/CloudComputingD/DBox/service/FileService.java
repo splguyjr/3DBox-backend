@@ -30,6 +30,7 @@ import java.io.InputStream;
 import java.net.URLEncoder;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 public class FileService {
@@ -60,25 +61,27 @@ public class FileService {
         multipartFiles.forEach(multipartFile -> {
 
             String originalFilename = multipartFile.getOriginalFilename();
+            String uniqueFilename = UUID.randomUUID().toString();
 
             ObjectMetadata metadata = new ObjectMetadata();
             metadata.setContentLength(multipartFile.getSize());
             metadata.setContentType(multipartFile.getContentType());
 
             try {
-                amazonS3Client.putObject(bucket, originalFilename, multipartFile.getInputStream(), metadata);
+                amazonS3Client.putObject(bucket, uniqueFilename, multipartFile.getInputStream(), metadata);
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
 
             fileRepository.save(
                     File.builder()
+                            .uuid(uniqueFilename)
                             .name(originalFilename)
                             .type(multipartFile.getContentType())
                             .size((Long) multipartFile.getSize())
                             .created_date(LocalDateTime.now())
                             .is_deleted(false)
-                            .s3_key(amazonS3Client.getUrl(bucket, originalFilename).toString())
+                            .s3_key(amazonS3Client.getUrl(bucket, uniqueFilename).toString())
                             .folder(folderRepository.findByFolderId(folderId))
                             .build()
             );
@@ -99,10 +102,6 @@ public class FileService {
     @Transactional
     public void renameFile(Long fileId, String newName) {
         File file = fileRepository.findById(fileId);
-        String originalFilename = file.getName();
-        // 이미 생성한 것은 변경 불가, S3버킷에서 파일 복사 후 기존 파일 삭제
-        amazonS3Client.copyObject(bucket, originalFilename, bucket, newName);
-        amazonS3Client.deleteObject(bucket, originalFilename);
         // DB에서 파일 이름 수정
         file.setName(newName);
         fileRepository.save(file);
@@ -136,9 +135,9 @@ public class FileService {
     @Transactional
     public void deleteFile(Long fileId) {
         File file = fileRepository.findById(fileId);
-        String fileName = file.getName();
+        String UUID = file.getUuid();
         // S3버킷에서 객체(파일) 삭제
-        amazonS3Client.deleteObject(bucket, fileName);
+        amazonS3Client.deleteObject(bucket, UUID);
         // DB에서 파일 정보 삭제
         fileRepository.deleteById(fileId);
     }
@@ -147,8 +146,10 @@ public class FileService {
      * 파일 다운로드
      */
     @Transactional
-    public ByteArrayOutputStream downloadFile(String fileName) throws IOException {
-        S3Object s3Object = amazonS3Client.getObject(bucket, fileName);
+    public ByteArrayOutputStream downloadFile(Long fileId) throws IOException {
+        File file = fileRepository.findById(fileId);
+        String UUID = file.getUuid();
+        S3Object s3Object = amazonS3Client.getObject(bucket, UUID);
         InputStream inputStream = s3Object.getObjectContent();
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 
