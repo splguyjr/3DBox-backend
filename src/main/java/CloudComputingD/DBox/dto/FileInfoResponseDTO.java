@@ -22,6 +22,7 @@ public class FileInfoResponseDTO {
 
         public static FileInfoResponseDTO.Info of(File file) {
             return Info.builder()
+                    .folder_id(file.getFolderId())
                     .name(file.getName())
                     .type(file.getType())
                     .size(file.getSize())

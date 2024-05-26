@@ -26,6 +26,7 @@ public class FileController {
         this.fileService = fileService;
     }
 
+    // 파일 업로드
     @PostMapping(value = "/file/upload/{folderId}")
     public ResponseEntity<HttpStatus> uploadFile(
             @PathVariable("folderId") Long folderId,
@@ -35,6 +36,7 @@ public class FileController {
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
+    // 파일 정보 조회
     @GetMapping(value = "/file/{fileId}")
     public ResponseEntity<?> getFile(
             @PathVariable("fileId") Long fileId
@@ -42,6 +44,7 @@ public class FileController {
         return new ResponseEntity<>(fileService.getFileById(fileId), HttpStatus.OK);
     }
 
+    // 파일 이름 수정
     @PatchMapping(value="/file/{fileId}/name/{fileName}")
     public ResponseEntity<HttpStatus> renameFile(
             @PathVariable("fileId") Long fileId,

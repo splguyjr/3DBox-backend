@@ -67,6 +67,10 @@ public class File {
         return type;
     }
 
+    // Getter for folder_id
+    public Long getFolderId() {
+        return folder != null ? folder.getId() : null;
+    }
 //    public Long getSize() {
 //        return size;
 //    }
