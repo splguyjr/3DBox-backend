@@ -54,6 +54,11 @@ public class File {
     @ToString.Exclude
     private Folder folder;
 
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    @ToString.Exclude
+    private User user;
+
     public void setName(String name) {
         this.name = name;
     }
