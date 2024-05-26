@@ -32,7 +32,7 @@ public class File {
     private Long size;
 
     @Column
-    private String parent_id;
+    private Long parent_id;
 
     @Column(nullable = false)
     private LocalDateTime created_date;

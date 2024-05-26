@@ -185,17 +185,21 @@ public class FileService {
         File file = fileRepository.findById(fileId);
         Folder folder = folderRepository.findByFolderId(folderId);
         String originalFilename = file.getName();
-        String newName = 'c' + originalFilename;
+        String originalUuid = file.getUuid();
+        String newUuid = UUID.randomUUID().toString();
         // S3버킷에서 파일 복사
-        amazonS3Client.copyObject(bucket, originalFilename, bucket, newName);
+        amazonS3Client.copyObject(bucket, originalUuid, bucket, newUuid);
         // 복사 파일 저장
         fileRepository.save(
                 File.builder()
-                        .name(newName)
+                        .uuid(newUuid)
+                        .name(originalFilename)
                         .type(file.getType())
                         .size(file.getSize())
+                        .parent_id(file.getId())
                         .created_date(LocalDateTime.now())
-                        .s3_key(amazonS3Client.getUrl(bucket, newName).toString())
+                        .is_deleted(false)
+                        .s3_key(amazonS3Client.getUrl(bucket, newUuid).toString())
                         .folder(folder)
                         .build()
         );
