@@ -26,8 +26,10 @@ public class Folder {
     @ToString.Exclude
     private List<File> files = new ArrayList<>();
 
-    @Column
-    private Long user_id;
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    @ToString.Exclude
+    private User user;
 
     @Column
     private Long parent_id;
@@ -48,5 +50,8 @@ public class Folder {
     @ColumnDefault("false")
     private Boolean is_deleted;
 
+    @Column
+    @ColumnDefault("false")
+    private Boolean is_root;
 
 }
