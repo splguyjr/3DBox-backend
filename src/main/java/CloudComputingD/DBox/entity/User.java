@@ -5,6 +5,10 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static lombok.AccessLevel.PROTECTED;
 
@@ -33,6 +37,10 @@ public class User {
     private OauthId oauthId;
     private String nickname;
     private String profileImageUrl;
+
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+    @ToString.Exclude
+    private List<Folder> folders = new ArrayList<>();
 
     public Long id() {
         return id;

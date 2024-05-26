@@ -34,4 +34,12 @@ public class OauthController {
         String login = oauthService.login(oauthServerType, code);
         return ResponseEntity.ok(login);
     }
+
+    @GetMapping("/login/profile/{oauthServerId}")
+    ResponseEntity<String> getprofileImageLink(
+            @PathVariable String oauthServerId
+    ) {
+        String imageLink = oauthService.getProfileImageLink(oauthServerId);
+        return ResponseEntity.ok(imageLink);
+    }
 }

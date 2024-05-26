@@ -2,8 +2,8 @@ package CloudComputingD.DBox.controller;
 
 
 import CloudComputingD.DBox.dto.FolderChildResponseDTO;
+import CloudComputingD.DBox.dto.FolderCreateRequestDTO;
 import CloudComputingD.DBox.dto.FolderFileResponseDTO;
-import CloudComputingD.DBox.entity.File;
 import CloudComputingD.DBox.service.FolderService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -18,11 +18,11 @@ public class FolderController {
 
     private final FolderService folderService;
 
-    @PostMapping("/create/{folderName}")
+    @PostMapping("/create")
     public ResponseEntity<HttpStatus> createFolder(
-            @PathVariable("folderName") String folderName
+            @RequestBody FolderCreateRequestDTO folderCreateRequestDTO
     ) {
-        folderService.createFolder(folderName);
+        folderService.createFolder(folderCreateRequestDTO);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
@@ -39,6 +39,7 @@ public class FolderController {
             @PathVariable("folderId") Long folderId
     ) {
         FolderChildResponseDTO folderChildResponseDTO = folderService.getFoldersByParentId(folderId);
+
         return new ResponseEntity<>(folderChildResponseDTO, HttpStatus.OK);
     }
 
@@ -51,5 +52,28 @@ public class FolderController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
+    @PatchMapping("/trash/{folderId}")
+    public ResponseEntity<HttpStatus> moveFolderToTrash(
+            @PathVariable("folderId") Long folderId
+    ) {
+        folderService.moveFolderToTrash(folderId);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @PatchMapping("/restore/{folderId}")
+    public ResponseEntity<HttpStatus> restoreFolderFromTrash(
+            @PathVariable("folderId") Long folderId
+    ) {
+        folderService.restoreFolderFromTrash(folderId);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @DeleteMapping("/delete/{folderId}")
+    public ResponseEntity<HttpStatus> deleteFolderPermanently(
+            @PathVariable("folderId") Long folderId
+    ) {
+        folderService.deleteFolderFromTrash(folderId);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
 
 }

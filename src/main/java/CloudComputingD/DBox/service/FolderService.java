@@ -1,38 +1,50 @@
 package CloudComputingD.DBox.service;
 
 import CloudComputingD.DBox.dto.FolderChildResponseDTO;
+import CloudComputingD.DBox.dto.FolderCreateRequestDTO;
 import CloudComputingD.DBox.dto.FolderFileResponseDTO;
 import CloudComputingD.DBox.entity.File;
 import CloudComputingD.DBox.entity.Folder;
+import CloudComputingD.DBox.entity.User;
 import CloudComputingD.DBox.mapper.FolderMapper;
 import CloudComputingD.DBox.repository.FolderRepository;
+import CloudComputingD.DBox.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 
 
 @Service
 public class FolderService {
     private final FolderRepository folderRepository;
     private final FolderMapper folderMapper;
+    private final UserRepository userRepository;
 
     @Autowired
-    public FolderService(FolderRepository folderRepository, FolderMapper folderMapper) {
+    public FolderService(FolderRepository folderRepository, FolderMapper folderMapper, UserRepository userRepository) {
         this.folderRepository = folderRepository;
         this.folderMapper = folderMapper;
+        this.userRepository = userRepository;
     }
 
     public Folder getFolderInfo(Long folderId) {
         return folderRepository.findById(folderId).orElse(null);
     }
 
-    public void createFolder(String folderName) {
+    public void createFolder(FolderCreateRequestDTO folderCreateRequestDTO) {
+        String folderName = folderCreateRequestDTO.folderName();
+        String userId = folderCreateRequestDTO.userId();
+        Long parentId = folderCreateRequestDTO.parentId();
+
+        User user = userRepository.findByOauthServerId(userId);
+        System.out.println(user.id());
         folderRepository.save(Folder.builder()
                 .name(folderName)
                 .created_date(LocalDateTime.now())
+                .parent_id(parentId)
+                .user(user)
                 .build());
     }
 
@@ -77,5 +89,24 @@ public class FolderService {
         folder.setName(folderName);
         folderRepository.save(folder);
     }
+
+    public void moveFolderToTrash(Long folderId) {
+        Folder folder = folderRepository.findByFolderId(folderId);
+        folder.setIs_deleted(true);
+        folderRepository.save(folder);
+    }
+
+    public void restoreFolderFromTrash(Long folderId) {
+        Folder folder = folderRepository.findByFolderId(folderId);
+        folder.setIs_deleted(false);
+        folderRepository.save(folder);
+    }
+
+    public void deleteFolderFromTrash(Long folderId) {
+        Folder folder = folderRepository.findByFolderId(folderId);
+        folderRepository.delete(folder);
+    }
+
+
 }
 
