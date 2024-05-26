@@ -3,7 +3,10 @@ package CloudComputingD.DBox.repository;
 import CloudComputingD.DBox.entity.File;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.TypedQuery;
 import org.springframework.stereotype.Repository;
+
+import java.util.List;
 
 @Repository
 public class FileRepository {
@@ -16,6 +19,13 @@ public class FileRepository {
     }
     public File findById(Integer id) {
         return em.find(File.class, id);
+    }
+
+    public List<File> findDeletedFiles(String userId) {
+        String jpql = "SELECT f FROM File f WHERE f.user.oauthId.oauthServerId = :userId AND f.is_deleted = true";
+        TypedQuery<File> query = em.createQuery(jpql, File.class);
+        query.setParameter("userId", userId);
+        return query.getResultList();
     }
 //    public List<File> findByUser(User user);
 }
