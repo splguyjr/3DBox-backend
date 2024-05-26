@@ -17,6 +17,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
+@Getter
 public class Folder {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
