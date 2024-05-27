@@ -2,19 +2,25 @@ package CloudComputingD.DBox.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.ColumnDefault;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
+import static jakarta.persistence.FetchType.LAZY;
+
 @Builder // 클래스 빌더 패턴으로 JPA 엔티티 객체를 생성한다.
 @NoArgsConstructor
 @AllArgsConstructor
-@Getter
+@Getter @Setter
 @Entity // 해당 어노테이션이 적용된 클래스는 JPA가 엔티티로 인식하며 테이블과 링크될 클래스임을 나타낸다.
 public class File {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column
     private Long id;
+
+    @Column(nullable = false)
+    private String uuid;
 
     @Column(nullable = false)
     private String name;
@@ -26,7 +32,7 @@ public class File {
     private Long size;
 
     @Column
-    private String parent_id;
+    private Long parent_id;
 
     @Column(nullable = false)
     private LocalDateTime created_date;
@@ -38,6 +44,7 @@ public class File {
     private LocalDateTime deleted_date;
 
     @Column
+    @ColumnDefault("false")
     private Boolean is_deleted;
 
     @Column(nullable = false)
@@ -49,25 +56,43 @@ public class File {
     @Column
     private BigDecimal location_y;
 
-    @ManyToOne
-    @JoinColumn(name = "folder_id")
-    @ToString.Exclude
+    @ManyToOne(fetch = LAZY)
+    @JoinColumn(name = "folder_id", referencedColumnName = "id")
     private Folder folder;
 
-    @ManyToOne
-    @JoinColumn(name = "user_id")
-    @ToString.Exclude
+    @ManyToOne(fetch = LAZY)
+    @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User user;
+
+    public String getName() {
+        return name;
+    }
 
     public void setName(String name) {
         this.name = name;
     }
 
-    public void setDeleted_date(LocalDateTime deleted_date) {
-        this.deleted_date = deleted_date;
+    public String getType() {
+        return type;
     }
 
-    public void setIs_deleted(Boolean is_deleted) {
-        this.is_deleted = is_deleted;
+    // Getter for folder_id
+    public Long getFolderId() {
+        return folder != null ? folder.getId() : null;
     }
+//    public Long getSize() {
+//        return size;
+//    }
+//
+//    public LocalDateTime getCreated_date() {
+//        return created_date;
+//    }
+//
+//    public void setDeleted_date(LocalDateTime deleted_date) {
+//        this.deleted_date = deleted_date;
+//    }
+//
+//    public void setIs_deleted(Boolean is_deleted) {
+//        this.is_deleted = is_deleted;
+//    }
 }

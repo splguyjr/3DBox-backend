@@ -1,14 +1,21 @@
 package CloudComputingD.DBox.controller;
 
+import CloudComputingD.DBox.entity.File;
 import CloudComputingD.DBox.service.FileService;
-import org.hibernate.annotations.Parameter;
+import lombok.val;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.UrlResource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.List;
 
 
 @Controller
@@ -19,40 +26,93 @@ public class FileController {
         this.fileService = fileService;
     }
 
-    @PostMapping(value = "/file/upload")
-    public ResponseEntity<String> uploadFile(
-            @RequestParam("file") MultipartFile multipartFile
+    // 파일 업로드
+    @PostMapping(value = "/file/upload/{folderId}")
+    public ResponseEntity<HttpStatus> uploadFile(
+            @PathVariable("folderId") Long folderId,
+            @RequestParam("files") List<MultipartFile> multipartFiles
     ) throws IOException {
-        fileService.uploadFile(multipartFile);
-        return ResponseEntity.ok().build();
+        fileService.uploadFile(folderId, multipartFiles);
+        return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
+    // 파일 정보 조회
     @GetMapping(value = "/file/{fileId}")
-    public ResponseEntity<?> getFileById(
-            @PathVariable("fileId") Integer fileId
+    public ResponseEntity<?> getFile(
+            @PathVariable("fileId") Long fileId
     ) {
-        return ResponseEntity.ok(fileService.getFileById(fileId));
+        return new ResponseEntity<>(fileService.getFileById(fileId), HttpStatus.OK);
     }
 
+    // 파일 이름 수정
     @PatchMapping(value="/file/{fileId}/name/{fileName}")
-    public ResponseEntity<String> renameFile(
-            @PathVariable("fileId") Integer fileId,
+    public ResponseEntity<HttpStatus> renameFile(
+            @PathVariable("fileId") Long fileId,
             @PathVariable("fileName") String newName
     ){
-        return ResponseEntity.ok(fileService.renameFile(fileId, newName));
+        fileService.renameFile(fileId, newName);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
+    // 파일 휴지통 이동
     @PatchMapping(value="/file/trash/{fileId}")
-    public ResponseEntity<Integer> trashFile(
-            @PathVariable("fileId") Integer fileId
+    public ResponseEntity<HttpStatus> trashFile(
+            @PathVariable("fileId") Long fileId
     ) {
-        return ResponseEntity.ok(fileService.trashFile(fileId));
+        fileService.trashFile(fileId);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
+    // 파일 복원
     @PatchMapping(value="/file/restore/{fileId}")
-    public ResponseEntity<Integer> restoreFile(
-            @PathVariable("fileId") Integer fileId
+    public ResponseEntity<HttpStatus> restoreFile(
+            @PathVariable("fileId") Long fileId
     ) {
-        return ResponseEntity.ok(fileService.restoreFile(fileId));
+        fileService.restoreFile(fileId);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    // 파일 영구 삭제
+    @DeleteMapping(value="/file/delete/{fileId}")
+    public ResponseEntity<HttpStatus> deleteFile(
+            @PathVariable("fileId") Long fileId
+    ) {
+        fileService.deleteFile(fileId);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    // 파일 다운로드
+    @GetMapping(value="/file/download/{fileId}")
+    public ResponseEntity<?> downloadFile(
+            @PathVariable("fileId") Long fileId
+    ) throws IOException {
+        ByteArrayOutputStream body = fileService.downloadFile(fileId);
+
+        String fileName = fileService.getFileName(fileId);
+
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + fileName + "\"")
+                .contentType(MediaType.MULTIPART_FORM_DATA)
+                .body(body.toByteArray());
+    }
+
+    // 파일 이동
+    @PatchMapping(value="/file/move/{fileId}/{folderId}")
+    public ResponseEntity<HttpStatus> moveFile(
+            @PathVariable("fileId") Long fileId,
+            @PathVariable("folderId") Long folderId
+    ) {
+        fileService.moveFile(fileId, folderId);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    // 파일 복사
+    @PostMapping(value="/file/copy/{fileId}/{folderId}")
+    public ResponseEntity<HttpStatus> copyFile(
+            @PathVariable("fileId") Long fileId,
+            @PathVariable("folderId") Long folderId
+    ) {
+        fileService.copyFile(fileId, folderId);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }
