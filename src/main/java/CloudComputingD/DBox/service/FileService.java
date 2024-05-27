@@ -2,6 +2,7 @@ package CloudComputingD.DBox.service;
 
 import CloudComputingD.DBox.entity.File;
 import CloudComputingD.DBox.entity.Folder;
+import CloudComputingD.DBox.entity.User;
 import CloudComputingD.DBox.repository.FileRepository;
 import CloudComputingD.DBox.dto.FileInfoResponseDTO;
 import CloudComputingD.DBox.repository.FolderRepository;
@@ -73,6 +74,9 @@ public class FileService {
                 throw new RuntimeException(e);
             }
 
+            Folder folder = folderRepository.findByFolderId(folderId);
+            User user = folder.getUser();
+
             fileRepository.save(
                     File.builder()
                             .uuid(uniqueFilename)
@@ -81,6 +85,7 @@ public class FileService {
                             .size((Long) multipartFile.getSize())
                             .created_date(LocalDateTime.now())
                             .is_deleted(false)
+                            .user(user)
                             .s3_key(amazonS3Client.getUrl(bucket, uniqueFilename).toString())
                             .folder(folderRepository.findByFolderId(folderId))
                             .build()
