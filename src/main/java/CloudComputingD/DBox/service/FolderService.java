@@ -40,11 +40,12 @@ public class FolderService {
         Long parentId = folderCreateRequestDTO.parentId();
 
         User user = userRepository.findByOauthServerId(userId);
+        Folder folder = folderRepository.findByFolderId(parentId);
         System.out.println(user.id());
         folderRepository.save(Folder.builder()
                 .name(folderName)
                 .created_date(LocalDateTime.now())
-                .parent_id(parentId)
+                .parent(folder)
                 .user(user)
                 .build());
     }
@@ -73,7 +74,8 @@ public class FolderService {
     }
 
     public FolderChildResponseDTO getFoldersByParentId(Long folderId) {
-        List<Folder> folders = folderRepository.findAllByParent_id(folderId);
+        Folder folder = folderRepository.findByFolderId(folderId);
+        List<Folder> folders = folderRepository.findAllByParent_id(folder);
 
         List<FolderChildResponseDTO.FolderDTO> responseFolders = folders.stream()
                 .map(folderMapper::folderToFolderChildResponseDTO)
@@ -93,6 +95,7 @@ public class FolderService {
     public void moveFolderToTrash(Long folderId) {
         Folder folder = folderRepository.findByFolderId(folderId);
         folder.setIs_deleted(true);
+        folder.setDeleted_date(LocalDateTime.now());
         folderRepository.save(folder);
     }
 
@@ -111,7 +114,6 @@ public class FolderService {
         String userId = trashRequestDTO.userId();
         List<Folder> deletedFolders = folderRepository.findDeletedFolders(userId);
         List<File> deletedFiles = fileRepository.findDeletedFiles(userId);
-
         List<FolderFileResponseDTO.FileDTO> fileDTOS = deletedFiles.stream()
                 .map(folderMapper::fileToFolderFileResponseDTO)
                 .toList();
