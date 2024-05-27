@@ -19,4 +19,7 @@ public interface FolderRepository extends JpaRepository<Folder,Long> {
 
     @Query("SELECT f FROM Folder f WHERE f.id = :folderId")
     Folder findByFolderId(@Param("folderId") Long folderId);
+
+    @Query("SELECT f FROM Folder f WHERE f.user.oauthId.oauthServerId = :userId and f.is_deleted = true")
+    List<Folder> findDeletedFolders(@Param("userId") String userId);
 }
