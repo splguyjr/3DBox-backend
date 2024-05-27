@@ -1,7 +1,6 @@
 package CloudComputingD.DBox.entity;
 
 import jakarta.persistence.*;
-import jakarta.validation.groups.Default;
 import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.DynamicInsert;
@@ -32,8 +31,14 @@ public class Folder {
     @ToString.Exclude
     private User user;
 
-    @Column
-    private Long parent_id;
+    @OneToMany(mappedBy = "parent", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+    @ToString.Exclude
+    private List<Folder> subFolders = new ArrayList<>();
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "parent_id", referencedColumnName = "id")
+    @ToString.Exclude
+    private Folder parent;
 
     @Column(nullable = false)
     private String name;

@@ -11,11 +11,11 @@ import java.util.List;
 
 @Repository
 public interface FolderRepository extends JpaRepository<Folder,Long> {
-    @Query("SELECT b FROM Folder a JOIN a.files b where a.id = :folderId")
+    @Query("SELECT b FROM Folder a JOIN a.files b where a.id = :folderId and a.is_deleted = false and b.is_deleted = false")
     List<File> findFilesByFolderId(@Param("folderId") Long folderId);
 
-    @Query("SELECT f FROM Folder f WHERE f.parent_id = :folderId")
-    List<Folder> findAllByParent_id(@Param("folderId") Long folderId);
+    @Query("SELECT f FROM Folder f WHERE f.parent = :parentFolder and f.is_deleted = false")
+    List<Folder> findAllByParent_id(@Param("parentFolder") Folder parentFolder);
 
     @Query("SELECT f FROM Folder f WHERE f.id = :folderId")
     Folder findByFolderId(@Param("folderId") Long folderId);
