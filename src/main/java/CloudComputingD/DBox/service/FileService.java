@@ -58,6 +58,8 @@ public class FileService {
      */
     @Transactional
     public void uploadFile(Long folderId, List<MultipartFile> multipartFiles) {
+        Folder folder = folderRepository.findByFolderId(folderId);
+        User user = folder.getUser();
 
         multipartFiles.forEach(multipartFile -> {
 
@@ -74,9 +76,6 @@ public class FileService {
                 throw new RuntimeException(e);
             }
 
-            Folder folder = folderRepository.findByFolderId(folderId);
-            User user = folder.getUser();
-
             fileRepository.save(
                     File.builder()
                             .uuid(uniqueFilename)
@@ -88,8 +87,7 @@ public class FileService {
                             .user(user)
                             .s3_key(amazonS3Client.getUrl(bucket, uniqueFilename).toString())
                             .folder(folderRepository.findByFolderId(folderId))
-                            .build()
-            );
+                            .build());
         });
     }
 
