@@ -59,5 +59,9 @@ public class OauthService {
         return user.profileImageUrl();
     }
 
+    public String getUserNickname(String oauthServerId) {
+        User user = oauthMemberRepository.findByOauthServerId(oauthServerId);
+        return user.nickname();
+    }
 
 }
