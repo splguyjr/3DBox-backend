@@ -21,11 +21,11 @@ public class FolderController {
 
     @PostMapping("/create")
     @Operation(summary = "폴더 생성", description = "폴더 이름, 유저 id, 상위 폴더 id 받아 폴더 생성")
-    public ResponseEntity<HttpStatus> createFolder(
+    public ResponseEntity<Long> createFolder(
             @RequestBody FolderCreateRequestDTO folderCreateRequestDTO
     ) {
-        folderService.createFolder(folderCreateRequestDTO);
-        return new ResponseEntity<>(HttpStatus.CREATED);
+        Long folderId = folderService.createFolder(folderCreateRequestDTO);
+        return new ResponseEntity<>(folderId, HttpStatus.CREATED);
     }
 
     @GetMapping("child/file/{folderId}")
@@ -86,11 +86,11 @@ public class FolderController {
 
     @PostMapping("/trash")
     @Operation(summary = "휴지통 내 파일, 폴더들 조회", description = "유저 id를 통해 휴지통 내 파일, 폴더들 조회")
-    public ResponseEntity<FolderAndFileResponseDTO> getTrashFilesAndFolders(
+    public ResponseEntity<TrashFolderAndFileResponseDTO> getTrashFilesAndFolders(
             @RequestBody TrashRequestDTO trashRequestDTO
     ) {
-        FolderAndFileResponseDTO folderAndFileResponseDTO = folderService.getTrashFilesandFolders(trashRequestDTO);
-        return new ResponseEntity<>(folderAndFileResponseDTO, HttpStatus.OK);
+        TrashFolderAndFileResponseDTO responseDTO = folderService.getTrashFilesandFolders(trashRequestDTO);
+        return new ResponseEntity<>(responseDTO, HttpStatus.OK);
     }
 
     @GetMapping("/child/{folderId}")
