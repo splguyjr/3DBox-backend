@@ -17,7 +17,8 @@ public class FolderFileResponseDTO {
                           String file_name,
                           String file_type,
                           Long file_size,
-                          LocalDateTime created_date) {
+                          LocalDateTime created_date,
+                          String s3_key) {
 //        public static FileDTO from(File file) {
 //            return FileDTO.builder()
 //                    .file_id(file.getId())
@@ -26,6 +27,15 @@ public class FolderFileResponseDTO {
 //                    .created_date(file.getCreated_date())
 //                    .build();
 //        }
+    }
+
+    @Builder
+    public record TrashFileDTO(Long file_id,
+                          String file_name,
+                          String file_type,
+                          Long file_size,
+                          LocalDateTime deleted_date,
+                          String s3_key) {
     }
 
     private List<FileDTO> files;

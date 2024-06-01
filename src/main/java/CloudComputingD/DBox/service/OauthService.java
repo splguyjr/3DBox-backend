@@ -1,5 +1,6 @@
 package CloudComputingD.DBox.service;
 
+import CloudComputingD.DBox.dto.UserLoginResponseDTO;
 import CloudComputingD.DBox.entity.Folder;
 import CloudComputingD.DBox.entity.User;
 import CloudComputingD.DBox.repository.FolderRepository;
@@ -26,7 +27,7 @@ public class OauthService {
         return authCodeRequestUrlProviderComposite.provide(oauthServerType);
     }
 
-    public String login(OauthServerType oauthServerType, String authCode) {
+    public UserLoginResponseDTO login(OauthServerType oauthServerType, String authCode) {
         User user = oauthMemberClientComposite.fetch(oauthServerType, authCode);
 //        User saved = oauthMemberRepository.findByOauthId(user.oauthId())
 //                .orElseGet(() -> oauthMemberRepository.save(user));
@@ -49,9 +50,13 @@ public class OauthService {
                 }
         );
         optionalUser = oauthMemberRepository.findByOauthId(user.oauthId());
+        Folder rootFolder = folderRepository.findRootFolder(optionalUser.get().oauthId().oauthServerId());
+        Long id = rootFolder.getId();
 
-        return optionalUser.get().oauthId().oauthServerId();
-
+        return UserLoginResponseDTO.builder()
+                .userId(optionalUser.get().oauthId().oauthServerId())
+                .rootFolderId(id)
+                .build();
     }
 
     public String getProfileImageLink(String oauthServerId) {

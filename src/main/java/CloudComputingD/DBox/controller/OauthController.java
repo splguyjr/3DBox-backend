@@ -1,5 +1,6 @@
 package CloudComputingD.DBox.controller;
 
+import CloudComputingD.DBox.dto.UserLoginResponseDTO;
 import CloudComputingD.DBox.service.OauthService;
 import CloudComputingD.DBox.oauth.domain.OauthServerType;
 import io.swagger.v3.oas.annotations.Operation;
@@ -7,6 +8,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -32,12 +34,13 @@ public class OauthController {
 
     @GetMapping("/login/{oauthServerType}")
     @Operation(summary = "인가 토큰을 통해 사용자 정보 조회", description = "이름, 사용자 고유 id, 프로필 이미지 정보 db에 저장")
-    ResponseEntity<String> login(
+    ResponseEntity<UserLoginResponseDTO> login(
             @PathVariable OauthServerType oauthServerType,
             @RequestParam("code") String code
     ) {
-        String login = oauthService.login(oauthServerType, code);
-        return ResponseEntity.ok(login);
+        UserLoginResponseDTO userLoginResponseDTO = oauthService.login(oauthServerType, code);
+
+        return new ResponseEntity<>(userLoginResponseDTO, HttpStatus.OK);
     }
 
     @GetMapping("/login/profile/{oauthServerId}")
