@@ -34,7 +34,7 @@ public class FolderService {
         return folderRepository.findById(folderId).orElse(null);
     }
 
-    public void createFolder(FolderCreateRequestDTO folderCreateRequestDTO) {
+    public Long createFolder(FolderCreateRequestDTO folderCreateRequestDTO) {
         String folderName = folderCreateRequestDTO.folderName();
         String userId = folderCreateRequestDTO.userId();
         Long parentId = folderCreateRequestDTO.parentId();
@@ -42,12 +42,14 @@ public class FolderService {
         User user = userRepository.findByOauthServerId(userId);
         Folder folder = folderRepository.findByFolderId(parentId);
         System.out.println(user.id());
-        folderRepository.save(Folder.builder()
+        Folder savedFolder = folderRepository.save(Folder.builder()
                 .name(folderName)
                 .created_date(LocalDateTime.now())
                 .parent(folder)
                 .user(user)
                 .build());
+
+        return savedFolder.getId();
     }
 
     //folderId를 받아 해당 폴더에 속하는 File들의 list를 받아오고 mapper를 통해 ResponseDto로 변환하여 리턴
@@ -110,16 +112,16 @@ public class FolderService {
         folderRepository.delete(folder);
     }
 
-    public FolderAndFileResponseDTO getTrashFilesandFolders(TrashRequestDTO trashRequestDTO) {
+    public TrashFolderAndFileResponseDTO getTrashFilesandFolders(TrashRequestDTO trashRequestDTO) {
         String userId = trashRequestDTO.userId();
         List<Folder> deletedFolders = folderRepository.findDeletedFolders(userId);
         List<File> deletedFiles = fileRepository.findDeletedFiles(userId);
-        List<FolderFileResponseDTO.FileDTO> fileDTOS = deletedFiles.stream()
-                .map(folderMapper::fileToFolderFileResponseDTO)
+        List<TrashFolderFileResponseDTO.TrashFileDTO> fileDTOS = deletedFiles.stream()
+                .map(folderMapper::trashFileToFolderFileResponseDTO)
                 .toList();
 
-        FolderFileResponseDTO folderFileResponseDTO = FolderFileResponseDTO.builder()
-                .files(fileDTOS)
+        TrashFolderFileResponseDTO trashFolderFileResponseDTO = TrashFolderFileResponseDTO.builder()
+                .trashFiles(fileDTOS)
                 .build();
 
         List<FolderChildResponseDTO.FolderDTO> folderDTOS = deletedFolders.stream()
@@ -130,8 +132,8 @@ public class FolderService {
                 .folders(folderDTOS)
                 .build();
 
-        return FolderAndFileResponseDTO.builder()
-                .filesInfo(folderFileResponseDTO)
+        return TrashFolderAndFileResponseDTO.builder()
+                .filesInfo(trashFolderFileResponseDTO)
                 .foldersInfo(folderChildResponseDTO)
                 .build();
     }
