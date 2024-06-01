@@ -30,7 +30,7 @@ public class FileController {
     }
 
     // 파일 업로드
-    @PostMapping(value = "/file/upload/{folderId}")
+    @PostMapping(value = "/file/upload/{folderId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @Operation(summary = "파일 업로드", description = "폴더 id, binary 파일 데이터 받아서 s3상에 업로드(복수 파일 가능)")
     public ResponseEntity<HttpStatus> uploadFile(
             @PathVariable("folderId") Long folderId,
