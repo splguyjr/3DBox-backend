@@ -101,6 +101,13 @@ public class FolderService {
         folderRepository.save(folder);
     }
 
+    public void moveFolder(Long folderId, Long parentId) {
+        Folder folder = folderRepository.findByFolderId(folderId);
+        Folder parentFolder= folderRepository.findByFolderId(parentId);
+        folder.setParent(parentFolder);
+        folderRepository.save(folder);
+    }
+
     public void restoreFolderFromTrash(Long folderId) {
         Folder folder = folderRepository.findByFolderId(folderId);
         folder.setIs_deleted(false);
