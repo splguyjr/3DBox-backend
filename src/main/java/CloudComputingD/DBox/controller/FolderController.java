@@ -57,6 +57,16 @@ public class FolderController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
+    @PatchMapping("/move/{folderId}/{parentId}")
+    @Operation(summary = "폴더 이동", description = "폴더 id를 통해 폴더 휴지통 복원")
+    public ResponseEntity<HttpStatus> moveFolder(
+            @PathVariable("folderId") Long folderId,
+            @PathVariable("parentId") Long parentId
+    ) {
+        folderService.moveFolder(folderId, parentId);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
     @PatchMapping("/trash/{folderId}")
     @Operation(summary = "폴더 휴지통 이동", description = "폴더 id를 통해 폴더 휴지통 이동")
     public ResponseEntity<HttpStatus> moveFolderToTrash(
