@@ -64,7 +64,7 @@ public class FileService {
         multipartFiles.forEach(multipartFile -> {
 
             String originalFilename = multipartFile.getOriginalFilename();
-            String uniqueFilename = UUID.randomUUID().toString();
+            String uniqueFilename = user.oauthId().oauthServerId() + "/" +originalFilename+ "/" + UUID.randomUUID().toString();
 
             ObjectMetadata metadata = new ObjectMetadata();
             metadata.setContentLength(multipartFile.getSize());
@@ -187,9 +187,13 @@ public class FileService {
     public void copyFile(Long fileId, Long folderId) {
         File file = fileRepository.findById(fileId);
         Folder folder = folderRepository.findByFolderId(folderId);
+        User user = folder.getUser();
+
         String originalFilename = file.getName();
         String originalUuid = file.getUuid();
-        String newUuid = UUID.randomUUID().toString();
+        String newUuid = user.oauthId().oauthServerId() + "/" + file.getName() + "/" + UUID.randomUUID().toString();
+
+
         // S3버킷에서 파일 복사
         amazonS3Client.copyObject(bucket, originalUuid, bucket, newUuid);
         // 복사 파일 저장
