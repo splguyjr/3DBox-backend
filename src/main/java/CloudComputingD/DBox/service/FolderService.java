@@ -34,7 +34,7 @@ public class FolderService {
         return folderRepository.findById(folderId).orElse(null);
     }
 
-    public Long createFolder(FolderCreateRequestDTO folderCreateRequestDTO) {
+    public FolderCreateResponseDTO createFolder(FolderCreateRequestDTO folderCreateRequestDTO) {
         String folderName = folderCreateRequestDTO.folderName();
         String userId = folderCreateRequestDTO.userId();
         Long parentId = folderCreateRequestDTO.parentId();
@@ -49,7 +49,11 @@ public class FolderService {
                 .user(user)
                 .build());
 
-        return savedFolder.getId();
+
+        return FolderCreateResponseDTO.builder()
+                .FolderId(savedFolder.getId())
+                .FolderName(folderName)
+                .build();
     }
 
     //folderId를 받아 해당 폴더에 속하는 File들의 list를 받아오고 mapper를 통해 ResponseDto로 변환하여 리턴
