@@ -203,7 +203,7 @@ public class FileService {
                         .name(originalFilename)
                         .type(file.getType())
                         .size(file.getSize())
-                        .parent_id(file.getId())
+//                        .parent_id(file.getId())
                         .created_date(LocalDateTime.now())
                         .is_deleted(false)
                         .s3_key(amazonS3Client.getUrl(bucket, newUuid).toString())
