@@ -1,7 +1,7 @@
-package CloudComputingD.DBox.oauth.infra.oauth.kakao.client;
+package CloudComputingD.DBox.global.config.oauth.infra.oauth.kakao.client;
 
-import CloudComputingD.DBox.oauth.infra.oauth.kakao.dto.KakaoMemberResponse;
-import CloudComputingD.DBox.oauth.infra.oauth.kakao.dto.KakaoToken;
+import CloudComputingD.DBox.global.config.oauth.infra.oauth.kakao.dto.KakaoToken;
+import CloudComputingD.DBox.global.config.oauth.infra.oauth.kakao.dto.KakaoMemberResponse;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestParam;

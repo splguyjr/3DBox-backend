@@ -1,6 +1,6 @@
-package CloudComputingD.DBox.oauth.presentation;
+package CloudComputingD.DBox.global.config.oauth.presentation;
 
-import CloudComputingD.DBox.oauth.domain.OauthServerType;
+import CloudComputingD.DBox.global.config.oauth.domain.OauthServerType;
 import org.springframework.core.convert.converter.Converter;
 
 public class OauthServerTypeConverter implements Converter<String, OauthServerType> {

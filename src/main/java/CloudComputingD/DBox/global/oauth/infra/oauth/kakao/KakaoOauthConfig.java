@@ -1,4 +1,4 @@
-package CloudComputingD.DBox.oauth.infra.oauth.kakao;
+package CloudComputingD.DBox.global.config.oauth.infra.oauth.kakao;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 

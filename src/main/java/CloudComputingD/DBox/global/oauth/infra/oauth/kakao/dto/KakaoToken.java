@@ -1,4 +1,4 @@
-package CloudComputingD.DBox.oauth.infra.oauth.kakao.dto;
+package CloudComputingD.DBox.global.config.oauth.infra.oauth.kakao.dto;
 
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;

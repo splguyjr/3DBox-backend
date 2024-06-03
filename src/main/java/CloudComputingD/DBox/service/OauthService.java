@@ -5,9 +5,9 @@ import CloudComputingD.DBox.entity.Folder;
 import CloudComputingD.DBox.entity.User;
 import CloudComputingD.DBox.repository.FolderRepository;
 import CloudComputingD.DBox.repository.UserRepository;
-import CloudComputingD.DBox.oauth.domain.OauthServerType;
-import CloudComputingD.DBox.oauth.domain.authcode.AuthCodeRequestUrlProviderComposite;
-import CloudComputingD.DBox.oauth.domain.client.OauthMemberClientComposite;
+import CloudComputingD.DBox.global.config.oauth.domain.OauthServerType;
+import CloudComputingD.DBox.global.config.oauth.domain.authcode.AuthCodeRequestUrlProviderComposite;
+import CloudComputingD.DBox.global.config.oauth.domain.client.OauthMemberClientComposite;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

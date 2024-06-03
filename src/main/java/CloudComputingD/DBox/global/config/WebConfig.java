@@ -1,6 +1,6 @@
-package CloudComputingD.DBox.oauth.common.config;
+package CloudComputingD.DBox.global.config.oauth.common.config;
 
-import CloudComputingD.DBox.oauth.presentation.OauthServerTypeConverter;
+import CloudComputingD.DBox.global.config.oauth.presentation.OauthServerTypeConverter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.format.FormatterRegistry;

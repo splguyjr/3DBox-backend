@@ -1,4 +1,4 @@
-package CloudComputingD.DBox.oauth.domain;
+package CloudComputingD.DBox.global.config.oauth.domain;
 
 import java.util.Locale;
 

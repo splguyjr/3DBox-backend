@@ -1,6 +1,6 @@
-package CloudComputingD.DBox.oauth.infra.oauth.config;
+package CloudComputingD.DBox.global.config.oauth.infra.oauth.config;
 
-import CloudComputingD.DBox.oauth.infra.oauth.kakao.client.KakaoApiClient;
+import CloudComputingD.DBox.global.config.oauth.infra.oauth.kakao.client.KakaoApiClient;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.reactive.function.client.WebClient;

@@ -1,6 +1,6 @@
-package CloudComputingD.DBox.oauth.domain.authcode;
+package CloudComputingD.DBox.global.config.oauth.domain.authcode;
 
-import CloudComputingD.DBox.oauth.domain.OauthServerType;
+import CloudComputingD.DBox.global.config.oauth.domain.OauthServerType;
 import org.springframework.stereotype.Component;
 
 import java.util.Map;

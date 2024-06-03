@@ -1,7 +1,7 @@
-package CloudComputingD.DBox.oauth.domain.client;
+package CloudComputingD.DBox.global.config.oauth.domain.client;
 
 import CloudComputingD.DBox.entity.User;
-import CloudComputingD.DBox.oauth.domain.OauthServerType;
+import CloudComputingD.DBox.global.config.oauth.domain.OauthServerType;
 
 public interface OauthMemberClient {
 

@@ -1,8 +1,8 @@
-package CloudComputingD.DBox.oauth.infra.oauth.kakao.authcode;
+package CloudComputingD.DBox.global.config.oauth.infra.oauth.kakao.authcode;
 
-import CloudComputingD.DBox.oauth.domain.OauthServerType;
-import CloudComputingD.DBox.oauth.domain.authcode.AuthCodeRequestUrlProvider;
-import CloudComputingD.DBox.oauth.infra.oauth.kakao.KakaoOauthConfig;
+import CloudComputingD.DBox.global.config.oauth.domain.OauthServerType;
+import CloudComputingD.DBox.global.config.oauth.domain.authcode.AuthCodeRequestUrlProvider;
+import CloudComputingD.DBox.global.config.oauth.infra.oauth.kakao.KakaoOauthConfig;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.web.util.UriComponentsBuilder;

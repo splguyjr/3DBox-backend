@@ -1,11 +1,11 @@
-package CloudComputingD.DBox.oauth.infra.oauth.kakao;
+package CloudComputingD.DBox.global.config.oauth.infra.oauth.kakao;
 
 import CloudComputingD.DBox.entity.User;
-import CloudComputingD.DBox.oauth.domain.OauthServerType;
-import CloudComputingD.DBox.oauth.domain.client.OauthMemberClient;
-import CloudComputingD.DBox.oauth.infra.oauth.kakao.client.KakaoApiClient;
-import CloudComputingD.DBox.oauth.infra.oauth.kakao.dto.KakaoMemberResponse;
-import CloudComputingD.DBox.oauth.infra.oauth.kakao.dto.KakaoToken;
+import CloudComputingD.DBox.global.config.oauth.domain.OauthServerType;
+import CloudComputingD.DBox.global.config.oauth.domain.client.OauthMemberClient;
+import CloudComputingD.DBox.global.config.oauth.infra.oauth.kakao.client.KakaoApiClient;
+import CloudComputingD.DBox.global.config.oauth.infra.oauth.kakao.dto.KakaoMemberResponse;
+import CloudComputingD.DBox.global.config.oauth.infra.oauth.kakao.dto.KakaoToken;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.util.LinkedMultiValueMap;

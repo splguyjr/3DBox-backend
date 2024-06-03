@@ -1,8 +1,8 @@
-package CloudComputingD.DBox.oauth.infra.oauth.kakao.dto;
+package CloudComputingD.DBox.global.config.oauth.infra.oauth.kakao.dto;
 
 import CloudComputingD.DBox.entity.embeddable.OauthId;
 import CloudComputingD.DBox.entity.User;
-import CloudComputingD.DBox.oauth.domain.OauthServerType;
+import CloudComputingD.DBox.global.config.oauth.domain.OauthServerType;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies.SnakeCaseStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 
