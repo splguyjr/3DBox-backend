@@ -21,11 +21,11 @@ public class FolderController {
 
     @PostMapping("/create")
     @Operation(summary = "폴더 생성", description = "폴더 이름, 유저 id, 상위 폴더 id 받아 폴더 생성")
-    public ResponseEntity<Long> createFolder(
+    public ResponseEntity<FolderCreateResponseDTO> createFolder(
             @RequestBody FolderCreateRequestDTO folderCreateRequestDTO
     ) {
-        Long folderId = folderService.createFolder(folderCreateRequestDTO);
-        return new ResponseEntity<>(folderId, HttpStatus.CREATED);
+        FolderCreateResponseDTO folderCreateResponseDTO = folderService.createFolder(folderCreateRequestDTO);
+        return new ResponseEntity<>(folderCreateResponseDTO, HttpStatus.CREATED);
     }
 
     @GetMapping("child/file/{folderId}")
