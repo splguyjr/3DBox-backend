@@ -37,6 +37,7 @@ jobs:
         uses: actions/setup-java@v3
         with:
           java-version: '17'
+          distribution: 'temurin'
       # 2-1) Set yml file
       - name: Set yml file
         uses: microsoft/variable-substitution@v1
