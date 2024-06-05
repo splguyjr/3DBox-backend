@@ -1,5 +1,6 @@
 package CloudComputingD.DBox.service;
 
+import CloudComputingD.DBox.dto.FileUploadResponseDTO;
 import CloudComputingD.DBox.entity.File;
 import CloudComputingD.DBox.entity.Folder;
 import CloudComputingD.DBox.entity.User;
@@ -33,6 +34,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Random;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 public class FileService {
@@ -58,7 +60,7 @@ public class FileService {
      * 파일 업로드
      */
     @Transactional
-    public void uploadFile(Long folderId, List<MultipartFile> multipartFiles) {
+    public FileUploadResponseDTO uploadFile(Long folderId, List<MultipartFile> multipartFiles) {
         Folder folder = folderRepository.findByFolderId(folderId);
         User user = folder.getUser();
 
@@ -66,7 +68,7 @@ public class FileService {
 //        int rand = random.nextInt(10) + 2000;
 //        String str = Integer.toString(rand);
 
-        multipartFiles.forEach(multipartFile -> {
+        List<FileUploadResponseDTO.FileInfo> fileInfos = multipartFiles.stream().map(multipartFile -> {
 
             String originalFilename = multipartFile.getOriginalFilename();
             String uniqueFilename = user.oauthId().oauthServerId() + "/" + UUID.randomUUID() + "/" + originalFilename;
@@ -93,7 +95,16 @@ public class FileService {
                             .s3_key(amazonS3Client.getUrl(bucket, uniqueFilename).toString())
                             .folder(folderRepository.findByFolderId(folderId))
                             .build());
-        });
+
+            // 각 파일에 대한 FileInfo 생성 로직
+            return FileUploadResponseDTO.FileInfo.builder()
+                    .s3_key(amazonS3Client.getUrl(bucket, uniqueFilename).toString())
+                    .build();
+        }).collect(Collectors.toList());
+
+        return FileUploadResponseDTO.builder()
+                .files(fileInfos)
+                .build();
     }
 
     /**
