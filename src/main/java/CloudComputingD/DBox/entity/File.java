@@ -31,8 +31,8 @@ public class File {
     @Column(nullable = false)
     private Long size;
 
-    @Column
-    private Long parent_id;
+//    @Column
+//    private Long parent_id;
 
     @Column(nullable = false)
     private LocalDateTime created_date;
@@ -50,11 +50,11 @@ public class File {
     @Column(nullable = false)
     private String s3_key;
 
-    @Column
-    private BigDecimal location_x;
-
-    @Column
-    private BigDecimal location_y;
+//    @Column
+//    private BigDecimal location_x;
+//
+//    @Column
+//    private BigDecimal location_y;
 
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "folder_id", referencedColumnName = "id")

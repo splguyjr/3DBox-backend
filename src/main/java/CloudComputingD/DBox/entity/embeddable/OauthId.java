@@ -1,6 +1,6 @@
 package CloudComputingD.DBox.entity.embeddable;
 
-import CloudComputingD.DBox.oauth.domain.OauthServerType;
+import CloudComputingD.DBox.global.config.oauth.domain.OauthServerType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 import jakarta.persistence.Enumerated;

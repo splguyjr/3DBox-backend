@@ -2,7 +2,7 @@ package CloudComputingD.DBox.controller;
 
 import CloudComputingD.DBox.dto.UserLoginResponseDTO;
 import CloudComputingD.DBox.service.OauthService;
-import CloudComputingD.DBox.oauth.domain.OauthServerType;
+import CloudComputingD.DBox.global.config.oauth.domain.OauthServerType;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletResponse;
