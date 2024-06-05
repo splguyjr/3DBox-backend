@@ -8,6 +8,7 @@ import CloudComputingD.DBox.repository.UserRepository;
 import CloudComputingD.DBox.oauth.domain.OauthServerType;
 import CloudComputingD.DBox.oauth.domain.authcode.AuthCodeRequestUrlProviderComposite;
 import CloudComputingD.DBox.oauth.domain.client.OauthMemberClientComposite;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -27,6 +28,7 @@ public class OauthService {
         return authCodeRequestUrlProviderComposite.provide(oauthServerType);
     }
 
+    @Transactional
     public UserLoginResponseDTO login(OauthServerType oauthServerType, String authCode) {
         User user = oauthMemberClientComposite.fetch(oauthServerType, authCode);
 //        User saved = oauthMemberRepository.findByOauthId(user.oauthId())
@@ -34,28 +36,33 @@ public class OauthService {
 
         Optional<User> optionalUser = oauthMemberRepository.findByOauthId(user.oauthId());
 
-        optionalUser.ifPresentOrElse(
-                savedUser -> {},
-                () -> {
-                    oauthMemberRepository.save(user);
+        boolean isNewUser = optionalUser.isEmpty();
 
-                    //유저 정보 저장 후 해당하는 유저의 root 폴더까지 생성하여 저장
-                    Folder folder = Folder.builder()
-                            .name(user.oauthId().oauthServerId() + "_root")
-                            .created_date(LocalDateTime.now())
-                            .is_root(true)
-                            .user(user)
-                            .build();
-                    folderRepository.save(folder);
-                }
-        );
+        if(isNewUser) {
+            //처음 로그인하는 사용자이므로 db에 저장
+            oauthMemberRepository.save(user);
+
+            //유저 정보 저장 후 해당하는 유저의 root 폴더까지 생성하여 저장
+            Folder folder = Folder.builder()
+                    .name(user.oauthId().oauthServerId() + "_root")
+                    .created_date(LocalDateTime.now())
+                    .is_root(true)
+                    .user(user)
+                    .build();
+
+            folderRepository.save(folder);
+        }
+
         optionalUser = oauthMemberRepository.findByOauthId(user.oauthId());
         Folder rootFolder = folderRepository.findRootFolder(optionalUser.get().oauthId().oauthServerId());
         Long id = rootFolder.getId();
 
+        String nickname = isNewUser ? null : optionalUser.get().getUserNickname();
+        System.out.println(nickname);
         return UserLoginResponseDTO.builder()
                 .userId(optionalUser.get().oauthId().oauthServerId())
                 .rootFolderId(id)
+                .nickname(nickname)
                 .build();
     }
 
@@ -64,9 +71,15 @@ public class OauthService {
         return user.profileImageUrl();
     }
 
-    public String getUserNickname(String oauthServerId) {
+    public String setUserNickname(String oauthServerId, String nickname) {
         User user = oauthMemberRepository.findByOauthServerId(oauthServerId);
-        return user.nickname();
+        user.setUserNickname(nickname);
+        oauthMemberRepository.save(user);
+        return nickname;
     }
 
+//    public String getUserNickname(String oauthServerId) {
+//        User user = oauthMemberRepository.findByOauthServerId(oauthServerId);
+//        return user.nickname();
+//    }
 }
