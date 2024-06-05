@@ -31,6 +31,7 @@ import java.io.InputStream;
 import java.net.URLEncoder;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Random;
 import java.util.UUID;
 
 @Service
@@ -61,10 +62,14 @@ public class FileService {
         Folder folder = folderRepository.findByFolderId(folderId);
         User user = folder.getUser();
 
+//        Random random = new Random();
+//        int rand = random.nextInt(10) + 2000;
+//        String str = Integer.toString(rand);
+
         multipartFiles.forEach(multipartFile -> {
 
             String originalFilename = multipartFile.getOriginalFilename();
-            String uniqueFilename = user.oauthId().oauthServerId() + "/" +originalFilename+ "/" + UUID.randomUUID().toString();
+            String uniqueFilename = user.oauthId().oauthServerId() + "/" + UUID.randomUUID() + "/" + originalFilename;
 
             ObjectMetadata metadata = new ObjectMetadata();
             metadata.setContentLength(multipartFile.getSize());
