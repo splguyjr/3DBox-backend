@@ -52,12 +52,22 @@ public class OauthController {
         return ResponseEntity.ok(imageLink);
     }
 
-    @GetMapping("/login/nickname/{oauthServerId}")
-    @Operation(summary = "사용자 id를 통해 유저 닉네임 조회", description = "사용자 고유 id를 받아 유저 닉네임 반환")
-    ResponseEntity<String> getUserNickname(
-            @PathVariable String oauthServerId
+    @PatchMapping ("/login/{oauthServerId}/nickname/{nickname}")
+    @Operation(summary = "사용자 id를 통해 유저 닉네임 설정", description = "사용자 고유 id를 받아 유저 닉네임 설정 후 반환 유저 닉네임 반환")
+    ResponseEntity<String> setUserNickname(
+            @PathVariable String oauthServerId,
+            @PathVariable String nickname
     ) {
-        String nickname = oauthService.getUserNickname(oauthServerId);
-        return ResponseEntity.ok(nickname);
+        String userNickname = oauthService.setUserNickname(oauthServerId, nickname);
+        return ResponseEntity.ok(userNickname);
     }
+
+    //    @GetMapping("/login/{oauthServerId}/nickname/")
+//    @Operation(summary = "사용자 id를 통해 유저 닉네임 조회", description = "사용자 고유 id를 받아 유저 닉네임 반환")
+//    ResponseEntity<String> getUserNickname(
+//            @PathVariable String oauthServerId
+//    ) {
+//        String nickname = oauthService.getUserNickname(oauthServerId);
+//        return ResponseEntity.ok(nickname);
+//    }
 }

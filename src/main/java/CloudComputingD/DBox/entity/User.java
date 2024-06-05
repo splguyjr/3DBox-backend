@@ -2,10 +2,7 @@ package CloudComputingD.DBox.entity;
 
 import CloudComputingD.DBox.entity.embeddable.OauthId;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,6 +11,7 @@ import static lombok.AccessLevel.PROTECTED;
 
 @Entity
 @Builder
+@Getter
 @AllArgsConstructor
 @NoArgsConstructor(access = PROTECTED)
 @Table(name = "users",
@@ -37,6 +35,7 @@ public class User {
     private OauthId oauthId;
     private String nickname;
     private String profileImageUrl;
+    private String userNickname;
 
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     @ToString.Exclude
@@ -56,6 +55,10 @@ public class User {
 
     public String nickname() {
         return nickname;
+    }
+
+    public void setUserNickname(String userNickname) {
+        this.userNickname = userNickname;
     }
 
     public String profileImageUrl() {
