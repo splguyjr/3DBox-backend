@@ -14,7 +14,7 @@ on:
 #jar 파일 빌드할 s3 버킷, aws 리전, CodeDeploy 앱 이름, 배포그룹이름
 env:
   AWS_REGION: ap-northeast-2
-  S3_BUCKET_NAME: 3dbox-gihub-actions-bucket
+  S3_BUCKET_NAME: 3dbox-github-actions-bucket
   CODE_DEPLOY_APPLICATION_NAME: 3dbox-codedeploy-app
   CODE_DEPLOY_DEPLOYMENT_GROUP_NAME: 3dbox-codedeploy-deployment-group
   # working-directory: ./3DBOX  # 이 코드는 제 프로젝트 경로를 맞춰주기 위해 적어주었습니다. 필요하시면 적으세요!
