@@ -4,8 +4,6 @@ name: Spring Boot CI with Gradle & Deploy to EC2
 
 # develop 브랜치에 push가 되면 아래의 flow가 실행됨
 on:
-  push:
-    branches: [ "develop" ]
   pull_request:
     branches: [ "develop" ]
 
@@ -16,7 +14,7 @@ env:
   S3_BUCKET_NAME: 3dbox-github-actions-bucket
   CODE_DEPLOY_APPLICATION_NAME: 3dbox-codedeploy-app
   CODE_DEPLOY_DEPLOYMENT_GROUP_NAME: 3dbox-codedeploy-deployment-group
-  RESOURCE_PATH: ./src/main/resources/application-deploy.yml
+  RESOURCE_PATH: ./src/main/resources/application-dev.yml
 permissions:
   contents: read
 
@@ -71,26 +69,31 @@ jobs:
       # 6) AWS S3에 업로드
       - name: Upload artifacts to AWS S3
         run: |
-          zip -r deploy-package.zip .
-          aws s3 cp deploy-package.zip s3://$S3_BUCKET_NAME/$GITHUB_SHA.zip
+          aws deploy push \
+          --application-name ${{ env.CODE_DEPLOY_APPLICATION_NAME }} \
+          --ignore-hidden-files \
+          --s3-location s3://$S3_BUCKET_NAME/$GITHUB_SHA.zip \
+          --source .
+#          zip -r deploy-package.zip .
+#          aws s3 cp deploy-package.zip s3://$S3_BUCKET_NAME/$GITHUB_SHA.zip
 
       # 7) 기존 배포 중지
-      - name: Stop existing deployment if any
-        run: |
-          DEPLOYMENT_ID=$(aws deploy list-deployments \
-            --application-name ${{ env.CODE_DEPLOY_APPLICATION_NAME }} \
-            --deployment-group-name ${{ env.CODE_DEPLOY_DEPLOYMENT_GROUP_NAME }} \
-            --include-only-statuses "Created" "Queued" "InProgress" \
-            --query "deployments[0]" \
-            --output text)
-          if [ "$DEPLOYMENT_ID" != "None" ]; then
-            echo "Stopping existing deployment: $DEPLOYMENT_ID"
-            aws deploy stop-deployment --deployment-id $DEPLOYMENT_ID
-            # 기다리는 시간 설정 (예: 30초)
-            sleep 30
-          fi
+#      - name: Stop existing deployment if any
+#        run: |
+#          DEPLOYMENT_ID=$(aws deploy list-deployments \
+#            --application-name ${{ env.CODE_DEPLOY_APPLICATION_NAME }} \
+#            --deployment-group-name ${{ env.CODE_DEPLOY_DEPLOYMENT_GROUP_NAME }} \
+#            --include-only-statuses "Created" "Queued" "InProgress" \
+#            --query "deployments[0]" \
+#            --output text)
+#          if [ "$DEPLOYMENT_ID" != "None" ]; then
+#            echo "Stopping existing deployment: $DEPLOYMENT_ID"
+#            aws deploy stop-deployment --deployment-id $DEPLOYMENT_ID
+#            # 기다리는 시간 설정 (예: 30초)
+#            sleep 30
+#          fi
 
-      # 8) AWS EC2에 Deploy
+      # 7) AWS EC2에 Deploy
       - name: Deploy to AWS EC2 from S3
         run: |
           aws deploy create-deployment \
