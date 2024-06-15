@@ -17,6 +17,9 @@ logging:
     org.hibernate.orm.jdbc.bind: TRACE
 
 spring:
+  config:
+    activate:
+      on-profile: dev
   datasource:
     url: jdbc:mysql://${URL}:3306/3dbox?serverTimezone=Asia/Seoul
     username: ${RDS_USERNAME}

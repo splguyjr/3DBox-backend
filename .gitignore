@@ -41,3 +41,6 @@ out/
 ### Docker ###
 Dockerfile
 docker-compose.yml
+
+### yml file ###
+src/main/**/application-local.yml
