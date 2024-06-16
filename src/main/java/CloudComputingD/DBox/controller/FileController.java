@@ -126,4 +126,12 @@ public class FileController {
         fileService.copyFile(fileId, folderId);
         return new ResponseEntity<>(HttpStatus.OK);
     }
+
+    @PostMapping(value = "/file/uploadGan", consumes = {"multipart/form-data"})
+    public ResponseEntity<HttpStatus> uploadGan(
+            @RequestParam("files") List<MultipartFile> multipartFiles
+    ) {
+        fileService.uploadGan(multipartFiles);
+        return new ResponseEntity<>(HttpStatus.CREATED);
+    }
 }

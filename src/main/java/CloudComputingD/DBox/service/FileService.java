@@ -228,5 +228,38 @@ public class FileService {
         );
     }
 
+    @Transactional
+    public void uploadGan(List<MultipartFile> multipartFiles) {
+        Long folderId = 9999L;
+        Folder folder = folderRepository.findByFolderId(folderId);
+
+        multipartFiles.forEach(multipartFile -> {
+            String originalFilename = multipartFile.getOriginalFilename();
+            String uniqueFilename = UUID.randomUUID() + "/" + originalFilename;
+
+            ObjectMetadata metadata = new ObjectMetadata();
+            metadata.setContentLength(multipartFile.getSize());
+            metadata.setContentType(multipartFile.getContentType());
+
+            try {
+                amazonS3Client.putObject(bucket, uniqueFilename, multipartFile.getInputStream(), metadata);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+
+            fileRepository.save(
+                    File.builder()
+                            .uuid(uniqueFilename)
+                            .name(originalFilename)
+                            .type(multipartFile.getContentType())
+                            .size((Long) multipartFile.getSize())
+                            .created_date(LocalDateTime.now())
+                            .is_deleted(false)
+                            .user(null) // user를 null로 설정
+                            .s3_key(amazonS3Client.getUrl(bucket, uniqueFilename).toString())
+                            .folder(folder) // 하드코딩된 folderId 사용
+                            .build());
+        });
+    }
 
 }
